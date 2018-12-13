@@ -37,7 +37,7 @@ print("   ", len(containers), "files, this is going to\n"
 print("________________________________________________\n")
 
 # Creating individual files under they're own name
-for footer in footer_list[:1]:
+for footer in footer_list:
     file = open(footer, "wb")
     link = my_url + footer
     source = urlopen(link).read()
