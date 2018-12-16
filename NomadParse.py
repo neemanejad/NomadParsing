@@ -21,8 +21,13 @@ user_dir = sys.argv[1]
 
 # Creates user inputted directory if it doesn't exist
 if (os.path.isdir(user_dir) == False):
-    os.mkdir(user_dir)
-    os.chdir(user_dir)
+    try:
+        os.mkdir(user_dir)
+    except PermissionError:
+        print("[Nomad]:   Permission denied, check permission settings\n")
+        sys.exit()
+    else:
+        os.chdir(user_dir)
 else:
     os.chdir(user_dir)
 
