@@ -8,22 +8,22 @@ my_url = sys.argv[2]
 
 # Shows user how to use NomadParse using "help" command line argument
 if (sys.argv[1] == "help"):
-    print("--Usage: ./NomadParse [PATH] [URL]")
+    print("[Nomad]:   --Usage: ./NomadParse [PATH] [URL]")
     sys.exit()
 
 # Input validation for inputted directory
 if (os.path.isdir(user_dir) == False):
-    print("Directory not found on current system\n"
-        "--Usage: ./NomadParse [PATH] [URL]")
+    print("[Nomad]:   Directory not found on current system\n"
+        "[Nomad]:   --Usage: ./NomadParse [PATH] [URL]")
     sys.exit()
 
 # Checks if URL exists
-sys.stdout.write("\n\nChecking URL...\n")
+sys.stdout.write("\n\n[Nomad]:   Checking URL...\n")
 sys.stdout.flush()
 r = requests.get(sys.argv[2])
 if (r.status_code != 200):
-    print("URL does not exist or unreachable\n"
-        "--Usage: ./NomadParse [PATH] [URL]")
+    print("[Nomad]:   URL does not exist or unreachable\n"
+        "[Nomad]:   --Usage: ./NomadParse [PATH] [URL]")
     sys.exit()
 
 # Checks if "NomadFiles" folder already exists
@@ -38,12 +38,12 @@ else:
 print("_____________________________________________________\n")
 
 # Opening the Client, grabbing the page
-sys.stdout.write("Opening URL...\n")
+sys.stdout.write("[Nomad]:   Opening URL...\n")
 sys.stdout.flush()
 uClient = urlopen(my_url)
 
 # Dumping html code into variable
-sys.stdout.write("Grabbing URL source code...\n")
+sys.stdout.write("[Nomad]:   Grabbing URL source code...\n")
 sys.stdout.flush()
 page_html = uClient.read()
 
@@ -54,12 +54,12 @@ uClient.close()
 page_soup = soup(page_html, "html.parser")
 
 # Organizes each link into an index
-sys.stdout.write("Organizing desired URL elements...\n")
+sys.stdout.write("[Nomad]:   Organizing desired URL elements...\n")
 sys.stdout.flush()
 containers = page_soup.findAll("td",{"valign":"top"})
 
 # Gets all the footers for the download links
-sys.stdout.write("Setting up download instance...\n\n")
+sys.stdout.write("[Nomad]:   Setting up download instance...\n\n")
 sys.stdout.flush()
 footer_list = []
 for container in containers[1:]:
@@ -82,14 +82,14 @@ for footer in enumerate(footer_list[:50], start=0):
     if (os.path.isfile(footer[1]) == True):
         exist += 1
         progress = (float(file_num) / float(total_files)) * 100
-        sys.stdout.write("Downloading to %s: %d/%d | %0.2f%%\r" % 
+        sys.stdout.write("[Nomad]:   Downloading to %s: %d/%d | %0.2f%%\r" % 
             (os.path.basename(user_dir), file_num, total_files, progress))
         sys.stdout.flush()
         continue
 
     # Display download progress to user
     progress = (float(file_num) / float(total_files)) * 100
-    sys.stdout.write("Downloading to %s: %d/%d | %0.2f%%\r" % 
+    sys.stdout.write("[Nomad]:   Downloading to %s: %d/%d | %0.2f%%\r" % 
         (os.path.basename(user_dir), file_num, total_files, progress))
     sys.stdout.flush()
 
@@ -122,8 +122,8 @@ if (elapsed_time >= 60):
 # Notify the user that downloads have finished
 print("\n\n\n    |All downloads to \"%s\" have completed|" % os.path.basename(os.getcwd()))
 print("_____________________________________________________\n")
-print(" - Files downloaded: %d" % dwnld_num)
-print(" - Files already on your device: %d" % (exist))
-print(" - Total download size: %.4f MB" % total_size)
-print(" - Elapsed time: %d:%.2d" % (elapsed_time_min, elapsed_time_sec))
+print("[Nomad]:   Files downloaded: %d" % dwnld_num)
+print("[Nomad]:   Files already on your device: %d" % (exist))
+print("[Nomad]:   Total download size: %.4f MB" % total_size)
+print("[Nomad]:   Elapsed time: %d:%.2d" % (elapsed_time_min, elapsed_time_sec))
 print("_____________________________________________________\n")
