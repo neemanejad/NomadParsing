@@ -11,21 +11,22 @@ if (sys.argv[1] == "help"):
     print("--Usage: ./NomadParse [PATH] [URL]")
     sys.exit()
 
-# Checks if URL exists
-sys.stdout.write("\n\nChecking URL...\n")
-sys.stdout.flush()
-r = requests.get(sys.argv[2])
-if (r.status_code != 200):
-    print("URL doesn not exist or unreachable\n"
-        "--Usage: ./NomadParse [PATH] [URL]")
-    sys.exit()
-
 # Input validation for inputted directory
 if (os.path.isdir(user_dir) == False):
     print("Directory not found on current system\n"
         "--Usage: ./NomadParse [PATH] [URL]")
     sys.exit()
 
+# Checks if URL exists
+sys.stdout.write("\n\nChecking URL...\n")
+sys.stdout.flush()
+r = requests.get(sys.argv[2])
+if (r.status_code != 200):
+    print("URL does not exist or unreachable\n"
+        "--Usage: ./NomadParse [PATH] [URL]")
+    sys.exit()
+
+# Checks if "NomadFiles" folder already exists
 os.chdir(user_dir)
 if (os.path.isdir("NomadFiles") == False):
     os.mkdir("NomadFiles")
