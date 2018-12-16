@@ -3,8 +3,8 @@ from bs4 import BeautifulSoup as soup
 import os, sys, time, requests
 
 # Checks if any command line arguments were used
-if (len(sys.argv) == 1):
-    print("[Nomad]:   try './NomadParse --help' for more information")
+if (len(sys.argv) == 1 or len(sys.argv) > 2):
+    print("[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
     sys.exit()
 
 # Shows user how to use NomadParse using "help" command line argument
@@ -33,7 +33,7 @@ else:
     sys.stdout.flush()
     try:
         r = requests.get(sys.argv[2])
-    except :
+    except:
         print("[Nomad]:   URL does not exist or unreachable\n"
             "[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
         sys.exit()
