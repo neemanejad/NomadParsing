@@ -27,7 +27,7 @@ if (os.path.isdir(user_dir) == False):
         print("[Nomad]:   Permission denied, check permission settings")
         sys.exit()
     except FileNotFoundError:
-        print("[Nomad]:   Directory \"%s\" does not exist" % (user_dir))
+        print("[Nomad]:   Can't create multiple subdirectories")
         sys.exit()
     else:
         os.chdir(user_dir)
