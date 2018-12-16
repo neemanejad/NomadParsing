@@ -24,7 +24,7 @@ if (os.path.isdir(user_dir) == False):
     try:
         os.mkdir(user_dir)
     except PermissionError:
-        print("[Nomad]:   Permission denied, check permission settings\n")
+        print("[Nomad]:   Permission denied, check permission settings")
         sys.exit()
     else:
         os.chdir(user_dir)
