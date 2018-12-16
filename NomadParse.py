@@ -3,7 +3,10 @@ from bs4 import BeautifulSoup as soup
 import os, sys, time, requests
 
 # Checks if any command line arguments were used
-if (len(sys.argv) == 1 or len(sys.argv) > 2):
+if (len(sys.argv) == 1):
+    print("[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
+elif (len(sys.argv) > 2):
+    print("[Nomad]:   Too many arguments used\n")
     print("[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
     sys.exit()
 
