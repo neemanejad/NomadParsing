@@ -2,12 +2,17 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup as soup
 import os, sys, time, requests
 
+# Checks if any command line arguments were used
+if (len(sys.argv) == 1):
+    print("[Nomad]:   try './NomadParse --help' for more information")
+    sys.exit()
+
 # Gets user inputted directory and URL
 user_dir = sys.argv[1]
 my_url = sys.argv[2]
 
 # Shows user how to use NomadParse using "help" command line argument
-if (sys.argv[1] == "help"):
+if (sys.argv[1] == "--help"):
     print("[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
     sys.exit()
 
