@@ -19,11 +19,12 @@ if (sys.argv[1] == "--help"):
 # Gets user inputted directory
 user_dir = sys.argv[1]
 
-# Input validation for inputted directory
+# Creates user inputted directory if it doesn't exist
 if (os.path.isdir(user_dir) == False):
-    print("[Nomad]:   Directory \"%s\" not found on current system\n"
-        "[Nomad]:   Usage: ./NomadParse [PATH] [URL]" % (user_dir))
-    sys.exit()
+    os.mkdir(user_dir)
+    os.chdir(user_dir)
+else:
+    os.chdir(user_dir)
 
 # Checks if user inputted a URL and if it exists or responds
 try:
@@ -45,14 +46,6 @@ else:
         print("[Nomad]:   URL does not exist or unreachable\n"
             "[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
         sys.exit()
-
-# Checks if "NomadFiles" folder already exists
-os.chdir(user_dir)
-if (os.path.isdir("NomadFiles") == False):
-    os.mkdir("NomadFiles")
-    os.chdir(os.path.abspath("NomadFiles"))
-else:
-    os.chdir(os.path.abspath("NomadFiles"))
 
 # Line for separation
 print("_____________________________________________________\n")
