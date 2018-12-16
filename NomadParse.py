@@ -1,20 +1,28 @@
 from urllib.request import urlopen
 from bs4 import BeautifulSoup as soup
-import os, sys, time
-
-# Shows user how to use NomadParse using "help" command line argument
-if (sys.argv[1] == "help"):
-    print("--Usage: ./NomadParse [PATH] [URL]")
-    sys.exit()
-    
+import os, sys, time, requests
 
 # Gets user inputted directory and URL
 user_dir = sys.argv[1]
 my_url = sys.argv[2]
 
+# Shows user how to use NomadParse using "help" command line argument
+if (sys.argv[1] == "help"):
+    print("--Usage: ./NomadParse [PATH] [URL]")
+    sys.exit()
+
+# Checks if URL exists
+sys.stdout.write("\n\nChecking URL...\n")
+sys.stdout.flush()
+r = requests.get(sys.argv[2])
+if (r.status_code != 200):
+    print("URL doesn not exist or unreachable\n"
+        "--Usage: ./NomadParse [PATH] [URL]")
+    sys.exit()
+
 # Input validation for inputted directory
 if (os.path.isdir(user_dir) == False):
-    print("Directory not found\n"
+    print("Directory not found on current system\n"
         "--Usage: ./NomadParse [PATH] [URL]")
     sys.exit()
 
@@ -29,7 +37,7 @@ else:
 print("_____________________________________________________\n")
 
 # Opening the Client, grabbing the page
-sys.stdout.write("Accessing URL...\n")
+sys.stdout.write("Opening URL...\n")
 sys.stdout.flush()
 uClient = urlopen(my_url)
 
