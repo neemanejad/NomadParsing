@@ -21,17 +21,26 @@ if (os.path.isdir(user_dir) == False):
         "[Nomad]:   Usage: ./NomadParse [PATH] [URL]" % (user_dir))
     sys.exit()
 
-# Checks if URL exists
-sys.stdout.write("\n\n[Nomad]:   Checking URL...\n")
-sys.stdout.flush()
-r = requests.get(sys.argv[2])
-if (r.status_code != 200):
-    print("[Nomad]:   URL does not exist or unreachable\n"
+# Checks if user inputted a URL and if it exists or responds
+try:
+    my_url = sys.argv[2]
+except IndexError:
+    print("[Nomad]:   URL is required\n"
         "[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
     sys.exit()
-
-# Gets user inputted URL
-my_url = sys.argv[2]
+else:
+    sys.stdout.write("[Nomad]:   Checking URL...\n")
+    sys.stdout.flush()
+    try:
+        r = requests.get(sys.argv[2])
+    except :
+        print("[Nomad]:   URL does not exist or unreachable\n"
+            "[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
+        sys.exit()
+    if (r.status_code != 200):
+        print("[Nomad]:   URL does not exist or unreachable\n"
+            "[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
+        sys.exit()
 
 # Checks if "NomadFiles" folder already exists
 os.chdir(user_dir)
@@ -130,7 +139,7 @@ if (elapsed_time >= 60):
 print("\n\n\n    |All downloads to \"%s\" have completed|" % os.path.basename(os.getcwd()))
 print("_____________________________________________________\n")
 print("[Nomad]:   Files downloaded: %d" % dwnld_num)
-print("[Nomad]:   Files already on your device: %d" % (exist))
+print("[Nomad]:   Files already in directory: %d" % (exist))
 print("[Nomad]:   Total download size: %.4f MB" % total_size)
 print("[Nomad]:   Elapsed time: %d:%.2d" % (elapsed_time_min, elapsed_time_sec))
 print("_____________________________________________________\n")
