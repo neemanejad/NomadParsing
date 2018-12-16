@@ -5,9 +5,9 @@ import os, sys, time, requests
 # Checks if any command line arguments were used
 if (len(sys.argv) == 1):
     print("[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
-elif (len(sys.argv) > 2):
-    print("[Nomad]:   Too many arguments used\n")
-    print("[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
+elif (len(sys.argv) > 3):
+    print("[Nomad]:   Too many arguments used\n"
+        "[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
     sys.exit()
 
 # Shows user how to use NomadParse using "help" command line argument
