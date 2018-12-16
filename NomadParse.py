@@ -17,8 +17,8 @@ user_dir = sys.argv[1]
 
 # Input validation for inputted directory
 if (os.path.isdir(user_dir) == False):
-    print("[Nomad]:   Directory not found on current system\n"
-        "[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
+    print("[Nomad]:   Directory \"%s\" not found on current system\n"
+        "[Nomad]:   Usage: ./NomadParse [PATH] [URL]" % (user_dir))
     sys.exit()
 
 # Checks if URL exists
