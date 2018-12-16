@@ -8,13 +8,13 @@ my_url = sys.argv[2]
 
 # Shows user how to use NomadParse using "help" command line argument
 if (sys.argv[1] == "help"):
-    print("[Nomad]:   --Usage: ./NomadParse [PATH] [URL]")
+    print("[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
     sys.exit()
 
 # Input validation for inputted directory
 if (os.path.isdir(user_dir) == False):
     print("[Nomad]:   Directory not found on current system\n"
-        "[Nomad]:   --Usage: ./NomadParse [PATH] [URL]")
+        "[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
     sys.exit()
 
 # Checks if URL exists
@@ -23,7 +23,7 @@ sys.stdout.flush()
 r = requests.get(sys.argv[2])
 if (r.status_code != 200):
     print("[Nomad]:   URL does not exist or unreachable\n"
-        "[Nomad]:   --Usage: ./NomadParse [PATH] [URL]")
+        "[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
     sys.exit()
 
 # Checks if "NomadFiles" folder already exists
