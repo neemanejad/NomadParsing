@@ -8,7 +8,7 @@ def check_anyargs():
     sys.exit()
 
 def check_toomany():
-    if (sys.argv[1] == "--help"):
+    if (sys.argv[1] > 3):
         print("[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
     sys.exit()
 
