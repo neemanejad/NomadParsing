@@ -47,10 +47,7 @@ containers = page_soup.findAll("td",{"valign":"top"})
 # Gets all the footers for the download links
 sys.stdout.write("[Nomad]:   Setting up download instance...\n\n")
 sys.stdout.flush()
-footer_list = []
-for container in containers[1:]:
-    footer_url = container.a["href"]
-    footer_list.append(footer_url)
+footer_list = footer(containers)
 
 # Initializing some variables
 total_size = 0
@@ -169,3 +166,9 @@ def check_url():
             sys.exit()
     return my_url
 
+def footer(containers):
+    footer_list = []
+    for container in containers[1:]:
+        footer_url = container.a["href"]
+        footer_list.append(footer_url)
+    return footer_list
