@@ -2,16 +2,14 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup as soup
 import os, sys, time, requests
 
-# Checks if any command line arguments were used
+# Gives user the "help" prompt if no args exist
 check_anyargs()
 
 # Checks if there's too many arguments
 check_toomany()
 
-# Shows user how to use NomadParse using "help" command line argument
-if (sys.argv[1] == "--help"):
-    print("[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
-    sys.exit()
+# Shows user how to use NomadParse
+check_help()
 
 # Gets user inputted directory
 user_dir = sys.argv[1]
@@ -151,10 +149,15 @@ print("_____________________________________________________\n")
 
 def check_anyargs():
     if (len(sys.argv) == 1):
-        print("[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
+        print("[Nomad]:   Try './NomadParse --help' for more information")
     sys.exit()
 
 def check_toomany():
+    if (sys.argv[1] == "--help"):
+        print("[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
+    sys.exit()
+
+def check_help():
     if (sys.argv[1] == "--help"):
         print("[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
     sys.exit()
