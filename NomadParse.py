@@ -18,25 +18,7 @@ user_dir = sys.argv[1]
 check_dir()
 
 # Checks if user inputted a URL and if it exists or responds
-try:
-    my_url = sys.argv[2]
-except IndexError:
-    print("[Nomad]:   URL is required\n"
-        "[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
-    sys.exit()
-else:
-    sys.stdout.write("[Nomad]:   Checking URL...\n")
-    sys.stdout.flush()
-    try:
-        r = requests.get(sys.argv[2])
-    except:
-        print("[Nomad]:   URL does not exist or unreachable\n"
-            "[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
-        sys.exit()
-    if (r.status_code != 200):
-        print("[Nomad]:   URL does not exist or unreachable\n"
-            "[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
-        sys.exit()
+my_url = check_url()
 
 # Line for separation
 print("_____________________________________________________\n")
@@ -164,4 +146,26 @@ def check_dir():
             os.chdir(user_dir)
     else:
         os.chdir(user_dir)
+
+def check_url():
+    try:
+        my_url = sys.argv[2]
+    except IndexError:
+        print("[Nomad]:   URL is required\n"
+            "[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
+        sys.exit()
+    else:
+        sys.stdout.write("[Nomad]:   Checking URL...\n")
+        sys.stdout.flush()
+        try:
+            r = requests.get(sys.argv[2])
+        except:
+            print("[Nomad]:   URL does not exist or unreachable\n"
+                "[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
+            sys.exit()
+        if (r.status_code != 200):
+            print("[Nomad]:   URL does not exist or unreachable\n"
+                "[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
+            sys.exit()
+    return my_url
 
