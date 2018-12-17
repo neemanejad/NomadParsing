@@ -16,13 +16,10 @@ def main():
     user_dir = sys.argv[1]
 
     # Creates user inputted directory if it doesn't exist
-    check_dir()
+    check_dir(user_dir)
 
     # Checks if user inputted a URL and if it exists or responds
     my_url = check_url()
-
-    # Line for separation
-    print("_____________________________________________________\n")
 
     # Opening the Client, grabbing the page
     sys.stdout.write("[Nomad]:   Opening URL...\n")
@@ -57,7 +54,7 @@ def main():
     total_files = len(containers)
 
     # Creating individual files under they're own name
-    download(containers, footer_list)
+    download(containers, footer_list, my_url, user_dir)
 
 main()
 
@@ -80,7 +77,7 @@ def check_help():
         print("[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
     sys.exit()
 
-def check_dir():
+def check_dir(user_dir):
     if (os.path.isdir(user_dir) == False):
         try:
             os.mkdir(user_dir)
@@ -124,7 +121,7 @@ def footer(containers):
         footer_list.append(footer_url)
     return footer_list
 
-def download(containers, footer_list):
+def download(containers, footer_list, my_url, user_dir):
     # Initializing some variables
     total_size = 0
     dwnld_num = 0
