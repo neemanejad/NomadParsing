@@ -1,11 +1,11 @@
-## Purpose of Branch
-* Create ease of program use and access for users by adding command line arguments and eliminating user input
-  during runtime.
+## Purpose
+* Automate the process of downloading thousands of files from a website.
 
-## Goals With This Branch
-* Transitioning NomadParse from acquiring user input during runtime to obtaining all user input in the command line,
-  eventaully input from a text file given by the user. 
-* Implementing a guide on how to use the program through command line arguments
+## Goals 
+* Transition NomadParse to a function based program.
+* Recover from loss of connection during download process gracefully.
+* Implement multithreaded task to significantly reduce download time. 
+* Make the program usable for any URL or list of URL's.
 
 ### NomadParse only accepts this URL at the moment
 URL: https://nomads.ncdc.noaa.gov/data/ndfd/201809/20180908/
