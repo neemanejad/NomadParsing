@@ -7,8 +7,8 @@ def check_anyargs(inputs):
         print("[Nomad]:   Try './NomadParse --help' for more information")
     sys.exit()
 
-def check_toomany():
-    if (sys.argv[1] > 3):
+def check_toomany(inputs):
+    if (len(inputs) > 3):
         print("[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
     sys.exit()
 
@@ -129,7 +129,7 @@ def main():
     check_anyargs(sys.argv)
 
     # Checks if there's too many arguments
-    check_toomany()
+    check_toomany(sys.argv)
 
     # Shows user how to use NomadParse
     check_help()
