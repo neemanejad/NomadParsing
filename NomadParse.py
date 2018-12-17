@@ -2,12 +2,6 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup as soup
 import os, sys, time, requests
 
-main()
-
-##################################################################
-
-
-
 def check_anyargs():
     if (len(sys.argv) == 1):
         print("[Nomad]:   Try './NomadParse --help' for more information")
@@ -183,3 +177,5 @@ def main():
 
     # Creating individual files under they're own name
     download(containers, footer_list, my_url, user_dir)
+
+main()
