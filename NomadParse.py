@@ -9,6 +9,7 @@ def check_anyargs(inputs):
 
 def check_toomany(inputs):
     if (len(inputs) > 3):
+        print("[Nomad]:   Too many arguments")
         print("[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
         sys.exit()
 
