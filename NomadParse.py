@@ -5,10 +5,8 @@ import os, sys, time, requests
 # Checks if any command line arguments were used
 check_anyargs()
 
-if (len(sys.argv) > 3):
-    print("[Nomad]:   Too many arguments used\n"
-        "[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
-    sys.exit()
+# Checks if there's too many arguments
+check_toomany()
 
 # Shows user how to use NomadParse using "help" command line argument
 if (sys.argv[1] == "--help"):
@@ -155,3 +153,10 @@ def check_anyargs():
     if (len(sys.argv) == 1):
         print("[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
     sys.exit()
+
+def check_toomany():
+    if (sys.argv[1] == "--help"):
+        print("[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
+    sys.exit()
+
+
