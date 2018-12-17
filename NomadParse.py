@@ -5,17 +5,17 @@ import os, sys, time, requests
 def check_anyargs(inputs):
     if (len(inputs) == 1):
         print("[Nomad]:   Try './NomadParse --help' for more information")
-    sys.exit()
+        sys.exit()
 
 def check_toomany(inputs):
     if (len(inputs) > 3):
         print("[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
-    sys.exit()
+        sys.exit()
 
 def check_help(first_arg):
     if (first_arg == "--help"):
         print("[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
-    sys.exit()
+        sys.exit()
 
 def check_dir(user_dir):
     if (os.path.isdir(user_dir) == False):
