@@ -2,64 +2,67 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup as soup
 import os, sys, time, requests
 
-# Gives user the "help" prompt if no args exist
-check_anyargs()
+def main():
+    # Gives user the "help" prompt if no args exist
+    check_anyargs()
 
-# Checks if there's too many arguments
-check_toomany()
+    # Checks if there's too many arguments
+    check_toomany()
 
-# Shows user how to use NomadParse
-check_help()
+    # Shows user how to use NomadParse
+    check_help()
 
-# Gets user inputted directory
-user_dir = sys.argv[1]
+    # Gets user inputted directory
+    user_dir = sys.argv[1]
 
-# Creates user inputted directory if it doesn't exist
-check_dir()
+    # Creates user inputted directory if it doesn't exist
+    check_dir()
 
-# Checks if user inputted a URL and if it exists or responds
-my_url = check_url()
+    # Checks if user inputted a URL and if it exists or responds
+    my_url = check_url()
 
-# Line for separation
-print("_____________________________________________________\n")
+    # Line for separation
+    print("_____________________________________________________\n")
 
-# Opening the Client, grabbing the page
-sys.stdout.write("[Nomad]:   Opening URL...\n")
-sys.stdout.flush()
-uClient = urlopen(my_url)
+    # Opening the Client, grabbing the page
+    sys.stdout.write("[Nomad]:   Opening URL...\n")
+    sys.stdout.flush()
+    uClient = urlopen(my_url)
 
-# Dumping html code into variable
-sys.stdout.write("[Nomad]:   Grabbing URL source code...\n")
-sys.stdout.flush()
-page_html = uClient.read()
+    # Dumping html code into variable
+    sys.stdout.write("[Nomad]:   Grabbing URL source code...\n")
+    sys.stdout.flush()
+    page_html = uClient.read()
 
-# Closing client
-uClient.close()
+    # Closing client
+    uClient.close()
 
-# Does the html parsing
-page_soup = soup(page_html, "html.parser")
+    # Does the html parsing
+    page_soup = soup(page_html, "html.parser")
 
-# Organizes each link into an index
-sys.stdout.write("[Nomad]:   Organizing desired URL elements...\n")
-sys.stdout.flush()
-containers = page_soup.findAll("td",{"valign":"top"})
+    # Organizes each link into an index
+    sys.stdout.write("[Nomad]:   Organizing desired URL elements...\n")
+    sys.stdout.flush()
+    containers = page_soup.findAll("td",{"valign":"top"})
 
-# Gets all the footers for the download links
-sys.stdout.write("[Nomad]:   Setting up download instance...\n\n")
-sys.stdout.flush()
-footer_list = footer(containers)
+    # Gets all the footers for the download links
+    sys.stdout.write("[Nomad]:   Setting up download instance...\n\n")
+    sys.stdout.flush()
+    footer_list = footer(containers)
 
-# Initializing some variables
-total_size = 0
-dwnld_num = 0
-exist = 0
-total_files = len(containers)
+    # Initializing some variables
+    total_size = 0
+    dwnld_num = 0
+    exist = 0
+    total_files = len(containers)
 
-# Creating individual files under they're own name
-download(containers, footer_list)
+    # Creating individual files under they're own name
+    download(containers, footer_list)
 
+main()
 
 ###############################################################
+
 
 
 def check_anyargs():
