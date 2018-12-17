@@ -3,10 +3,9 @@ from bs4 import BeautifulSoup as soup
 import os, sys, time, requests
 
 # Checks if any command line arguments were used
-if (len(sys.argv) == 1):
-    print("[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
-    sys.exit()
-elif (len(sys.argv) > 3):
+check_anyargs()
+
+if (len(sys.argv) > 3):
     print("[Nomad]:   Too many arguments used\n"
         "[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
     sys.exit()
@@ -148,3 +147,11 @@ print("[Nomad]:   Files already in directory: %d" % (exist))
 print("[Nomad]:   Total download size: %.4f MB" % total_size)
 print("[Nomad]:   Elapsed time: %d:%.2d" % (elapsed_time_min, elapsed_time_sec))
 print("_____________________________________________________\n")
+
+
+
+
+def check_anyargs():
+    if (len(sys.argv) == 1):
+        print("[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
+    sys.exit()
