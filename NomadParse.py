@@ -12,8 +12,8 @@ def check_toomany(inputs):
         print("[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
     sys.exit()
 
-def check_help():
-    if (sys.argv[1] == "--help"):
+def check_help(first_arg):
+    if (first_arg == "--help"):
         print("[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
     sys.exit()
 
@@ -132,7 +132,7 @@ def main():
     check_toomany(sys.argv)
 
     # Shows user how to use NomadParse
-    check_help()
+    check_help(sys.argv[1])
 
     # Gets user inputted directory
     user_dir = sys.argv[1]
