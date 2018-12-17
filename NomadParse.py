@@ -2,8 +2,8 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup as soup
 import os, sys, time, requests
 
-def check_anyargs():
-    if (len(sys.argv) == 1):
+def check_anyargs(inputs):
+    if (len(inputs) == 1):
         print("[Nomad]:   Try './NomadParse --help' for more information")
     sys.exit()
 
@@ -126,7 +126,7 @@ def download(containers, footer_list, my_url, user_dir):
 
 def main():
     # Gives user the "help" prompt if no args exist
-    check_anyargs()
+    check_anyargs(sys.argv)
 
     # Checks if there's too many arguments
     check_toomany()
