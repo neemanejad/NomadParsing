@@ -1,22 +1,6 @@
 from urllib.request import urlopen
 from bs4 import BeautifulSoup as soup
-import os, sys, time, requests
-
-def check_anyargs(inputs):
-    if (len(inputs) == 1):
-        print("[Nomad]:   Try './NomadParse --help' for more information")
-        sys.exit()
-
-def check_toomany(inputs):
-    if (len(inputs) > 3):
-        print("[Nomad]:   Too many arguments")
-        print("[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
-        sys.exit()
-
-def check_help(first_arg):
-    if (first_arg == "--help"):
-        print("[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
-        sys.exit()
+import os, sys, time, requests, argparse
 
 def check_dir(user_dir):
     if (os.path.isdir(user_dir) == False):
@@ -32,28 +16,22 @@ def check_dir(user_dir):
             os.chdir(user_dir)
     else:
         os.chdir(user_dir)
+    return user_dir
 
-def check_url():
+def check_url(user_url):
+    sys.stdout.write("[Nomad]:   Checking URL...\n")
+    sys.stdout.flush()
     try:
-        my_url = sys.argv[2]
-    except IndexError:
-        print("[Nomad]:   URL is required\n"
+        r = requests.get(user_url)
+    except:
+        print("[Nomad]:   URL does not exist or unreachable\n"
             "[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
         sys.exit()
-    else:
-        sys.stdout.write("[Nomad]:   Checking URL...\n")
-        sys.stdout.flush()
-        try:
-            r = requests.get(sys.argv[2])
-        except:
-            print("[Nomad]:   URL does not exist or unreachable\n"
-                "[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
-            sys.exit()
-        if (r.status_code != 200):
-            print("[Nomad]:   URL does not exist or unreachable\n"
-                "[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
-            sys.exit()
-    return my_url
+    if (r.status_code != 200):
+        print("[Nomad]:   URL does not exist or unreachable\n"
+            "[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
+        sys.exit()
+    return user_url
 
 def footer(containers):
     footer_list = []
@@ -62,7 +40,7 @@ def footer(containers):
         footer_list.append(footer_url)
     return footer_list
 
-def download(containers, footer_list, my_url, user_dir):
+def download(containers, footer_list, user_url, user_dir):
     # Initializing some variables
     total_size = 0
     dwnld_num = 0
@@ -92,7 +70,7 @@ def download(containers, footer_list, my_url, user_dir):
 
         # Writing files to current directory
         file = open(footer[1], "wb")
-        link = my_url + footer[1]
+        link = user_url + footer[1]
         source = urlopen(link).read()
         file.write(source)
         file.close()
@@ -126,28 +104,22 @@ def download(containers, footer_list, my_url, user_dir):
     print("_____________________________________________________\n")
 
 def main():
-    # Gives user the "help" prompt if no args exist
-    check_anyargs(sys.argv)
-
-    # Checks if there's too many arguments
-    check_toomany(sys.argv)
-
-    # Shows user how to use NomadParse
-    check_help(sys.argv[1])
-
-    # Gets user inputted directory
-    user_dir = sys.argv[1]
+    # Command-line input validation
+    parser = argparse.ArgumentParser()
+    parser.add_argument("PATH", help="where you want the files to be downloaded", type=str)
+    parser.add_argument("URL", help="URL you want to download files from", type=str)
+    args = parser.parse_args()
 
     # Creates user inputted directory if it doesn't exist
-    check_dir(user_dir)
+    user_dir = check_dir(args.PATH)
 
     # Checks if user inputted a URL and if it exists or responds
-    my_url = check_url()
+    user_url = check_url(args.URL)
 
     # Opening the Client, grabbing the page
     sys.stdout.write("[Nomad]:   Opening URL...\n")
     sys.stdout.flush()
-    uClient = urlopen(my_url)
+    uClient = urlopen(user_url)
 
     # Dumping html code into variable
     sys.stdout.write("[Nomad]:   Grabbing URL source code...\n")
@@ -177,6 +149,6 @@ def main():
     total_files = len(containers)
 
     # Creating individual files under they're own name
-    download(containers, footer_list, my_url, user_dir)
+    download(containers, footer_list, user_url, user_dir)
 
 main()
