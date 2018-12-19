@@ -105,12 +105,12 @@ def download(containers, footer_list, user_url, user_dir):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("path", help="where you want the files to be downloaded", type=str)
+    parser.add_argument("PATH", help="where you want the files to be downloaded", type=str)
     parser.add_argument("URL", help="URL you want to download files from", type=str)
     args = parser.parse_args()
 
     # Creates user inputted directory if it doesn't exist
-    user_dir = check_dir(args.path)
+    user_dir = check_dir(args.PATH)
 
     # Checks if user inputted a URL and if it exists or responds
     user_url = check_url(args.URL)
