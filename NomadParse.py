@@ -1,6 +1,6 @@
 from urllib.request import urlopen
 from bs4 import BeautifulSoup as soup
-import os, sys, time, requests
+import os, sys, time, requests, argparse
 
 def check_anyargs(inputs):
     if (len(inputs) == 1):
@@ -33,9 +33,9 @@ def check_dir(user_dir):
     else:
         os.chdir(user_dir)
 
-def check_url():
+def check_url(user_url):
     try:
-        my_url = sys.argv[2]
+        my_url = user_url
     except IndexError:
         print("[Nomad]:   URL is required\n"
             "[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
@@ -44,7 +44,7 @@ def check_url():
         sys.stdout.write("[Nomad]:   Checking URL...\n")
         sys.stdout.flush()
         try:
-            r = requests.get(sys.argv[2])
+            r = requests.get(my_url)
         except:
             print("[Nomad]:   URL does not exist or unreachable\n"
                 "[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
@@ -126,23 +126,17 @@ def download(containers, footer_list, my_url, user_dir):
     print("_____________________________________________________\n")
 
 def main():
-    # Gives user the "help" prompt if no args exist
-    check_anyargs(sys.argv)
-
-    # Checks if there's too many arguments
-    check_toomany(sys.argv)
-
-    # Shows user how to use NomadParse
-    check_help(sys.argv[1])
-
-    # Gets user inputted directory
-    user_dir = sys.argv[1]
+    parser = argparse.ArgumentParser()
+    parser.add_argument("path", help="where you want the files to be downloaded", dest="user_dir", type=str)
+    parser.add_argument("URL", help="URL you want to download files from", dest="user_url", type=str)
+    args = parser.parse_args()
 
     # Creates user inputted directory if it doesn't exist
-    check_dir(user_dir)
+    check_dir(args.user_dir)
+    user_dir = args.user_dir
 
     # Checks if user inputted a URL and if it exists or responds
-    my_url = check_url()
+    my_url = check_url(args.user_url)
 
     # Opening the Client, grabbing the page
     sys.stdout.write("[Nomad]:   Opening URL...\n")
