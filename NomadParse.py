@@ -104,6 +104,7 @@ def download(containers, footer_list, user_url, user_dir):
     print("_____________________________________________________\n")
 
 def main():
+    # Command-line input validation
     parser = argparse.ArgumentParser()
     parser.add_argument("PATH", help="where you want the files to be downloaded", type=str)
     parser.add_argument("URL", help="URL you want to download files from", type=str)
