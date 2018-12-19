@@ -2,22 +2,6 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup as soup
 import os, sys, time, requests, argparse
 
-def check_anyargs(inputs):
-    if (len(inputs) == 1):
-        print("[Nomad]:   Try './NomadParse --help' for more information")
-        sys.exit()
-
-def check_toomany(inputs):
-    if (len(inputs) > 3):
-        print("[Nomad]:   Too many arguments")
-        print("[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
-        sys.exit()
-
-def check_help(first_arg):
-    if (first_arg == "--help"):
-        print("[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
-        sys.exit()
-
 def check_dir(user_dir):
     if (os.path.isdir(user_dir) == False):
         try:
@@ -32,6 +16,7 @@ def check_dir(user_dir):
             os.chdir(user_dir)
     else:
         os.chdir(user_dir)
+    return user_dir
 
 def check_url(user_url):
     try:
@@ -132,11 +117,10 @@ def main():
     args = parser.parse_args()
 
     # Creates user inputted directory if it doesn't exist
-    check_dir(args.user_dir)
-    user_dir = args.user_dir
+    user_dir = check_dir(args.path)
 
     # Checks if user inputted a URL and if it exists or responds
-    my_url = check_url(args.user_url)
+    my_url = check_url(args.URL)
 
     # Opening the Client, grabbing the page
     sys.stdout.write("[Nomad]:   Opening URL...\n")
