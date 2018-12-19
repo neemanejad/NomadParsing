@@ -58,14 +58,14 @@ def download(containers, footer_list, user_url, user_dir):
             exist += 1
             progress = (float(file_num) / float(total_files)) * 100
             sys.stdout.write("[Nomad]:   Downloading to %s: %d/%d | %0.2f%%\r" % 
-                (os.path.basename(user_url), file_num, total_files, progress))
+                (os.path.basename(user_dir), file_num, total_files, progress))
             sys.stdout.flush()
             continue
 
         # Display download progress to user
         progress = (float(file_num) / float(total_files)) * 100
         sys.stdout.write("[Nomad]:   Downloading to %s: %d/%d | %0.2f%%\r" % 
-            (os.path.basename(user_url), file_num, total_files, progress))
+            (os.path.basename(user_dir), file_num, total_files, progress))
         sys.stdout.flush()
 
         # Writing files to current directory
