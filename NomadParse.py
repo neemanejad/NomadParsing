@@ -44,7 +44,6 @@ def download(containers, footer_list, user_url, user_dir):
     # Initializing some variables
     total_size = 0
     dwnld_num = 0
-    exist = 0
     total_files = len(containers)
 
     # Creating individual files under they're own name
@@ -55,7 +54,6 @@ def download(containers, footer_list, user_url, user_dir):
 
         # Checking if file is already in Directory and displaying progress
         if (os.path.isfile(footer[1]) == True):
-            exist += 1
             progress = (float(file_num) / float(total_files)) * 100
             sys.stdout.write("[Nomad]:   Downloading to %s: %d/%d | %0.2f%%\r" % 
                 (os.path.basename(user_dir), file_num, total_files, progress))
@@ -98,7 +96,6 @@ def download(containers, footer_list, user_url, user_dir):
     print("\n\n\n    |All downloads to \"%s\" have completed|" % os.path.basename(os.getcwd()))
     print("_____________________________________________________\n")
     print("[Nomad]:   Files downloaded: %d" % dwnld_num)
-    print("[Nomad]:   Files already in directory: %d" % (exist))
     print("[Nomad]:   Total download size: %.4f MB" % total_size)
     print("[Nomad]:   Elapsed time: %d:%.2d" % (elapsed_time_min, elapsed_time_sec))
     print("_____________________________________________________\n")
