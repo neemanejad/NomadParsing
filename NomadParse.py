@@ -41,7 +41,9 @@ def footer(containers):
     return footer_list
 
 def download(containers, footer_list, user_url, user_dir):
+
     # Initializing some variables
+    global total_size, dwnld_num
     total_size = 0
     dwnld_num = 0
     total_files = len(containers)
