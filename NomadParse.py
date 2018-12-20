@@ -40,10 +40,18 @@ def footer(containers):
         footer_list.append(footer_url)
     return footer_list
 
+def end_summary(dwnld_num, total_size, minutes, seconds):
+    # Notify the user that downloads have finished
+    print("\n\n\n    |All downloads to \"%s\" have completed|" % os.path.basename(os.getcwd()))
+    print("_____________________________________________________\n")
+    print("[Nomad]:   Files downloaded: %d" % dwnld_num)
+    print("[Nomad]:   Total download size: %.4f MB" % total_size)
+    print("[Nomad]:   Elapsed time: %d:%.2d" % (minutes, seconds))
+    print("_____________________________________________________\n")
+    
 def download(containers, footer_list, user_url, user_dir):
 
     # Initializing some variables
-    global total_size, dwnld_num
     total_size = 0
     dwnld_num = 0
     total_files = len(containers)
@@ -94,13 +102,7 @@ def download(containers, footer_list, user_url, user_dir):
     if (elapsed_time >= 60):
         elapsed_time_sec = elapsed_time % elapsed_time_min
 
-    # Notify the user that downloads have finished
-    print("\n\n\n    |All downloads to \"%s\" have completed|" % os.path.basename(os.getcwd()))
-    print("_____________________________________________________\n")
-    print("[Nomad]:   Files downloaded: %d" % dwnld_num)
-    print("[Nomad]:   Total download size: %.4f MB" % total_size)
-    print("[Nomad]:   Elapsed time: %d:%.2d" % (elapsed_time_min, elapsed_time_sec))
-    print("_____________________________________________________\n")
+    return dwnld_num, total_size, elapsed_time_min, elapsed_time_sec
 
 def main():
     # Command-line input validation
@@ -148,6 +150,9 @@ def main():
     total_files = len(containers)
 
     # Creating individual files under they're own name
-    download(containers, footer_list, user_url, user_dir)
+    dwnld_num, total_files, minutes, seconds = download(containers, footer_list, user_url, user_dir)
+
+    # Show download summary
+    end_summary(dwnld_num, total_files, minutes, seconds)
 
 main()
