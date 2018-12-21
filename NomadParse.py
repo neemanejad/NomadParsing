@@ -2,6 +2,12 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup as soup
 import os, sys, time, requests, argparse, threading
 
+# Global Variables for download statistics
+total_size = 0
+dwnld_num = 0
+minutes = 0
+seconds = 0
+
 def check_dir(user_dir):
     if (os.path.isdir(user_dir) == False):
         try:
@@ -39,21 +45,15 @@ def footer(containers):
         footer_url = container.a["href"]
         footer_list.append(footer_url)
     return footer_list
-
-def end_summary(dwnld_num, total_size, minutes, seconds):
-    # Notify the user that downloads have finished
-    print("\n\n\n    |All downloads to \"%s\" have completed|" % os.path.basename(os.getcwd()))
-    print("_____________________________________________________\n")
-    print("[Nomad]:   Files downloaded: %d" % dwnld_num)
-    print("[Nomad]:   Total download size: %.4f MB" % total_size)
-    print("[Nomad]:   Elapsed time: %d:%.2d" % (minutes, seconds))
-    print("_____________________________________________________\n")
     
 def download(containers, footer_list, user_url, user_dir):
 
+    # Set global variables
+    global dwnld_num, total_size, minutes, seconds
+
     # Initializing some variables
-    total_size = 0
-    dwnld_num = 0
+    #total_size = 0
+    #dwnld_num = 0
     total_files = len(containers)
 
     # Creating individual files under they're own name
@@ -97,12 +97,22 @@ def download(containers, footer_list, user_url, user_dir):
 
     # Unit conversions for final statistics
     total_size = float(total_size) / (1000000)
-    elapsed_time_min = elapsed_time / 60
-    elapsed_time_sec = elapsed_time 
+    minutes = elapsed_time / 60
+    seconds = elapsed_time 
     if (elapsed_time >= 60):
-        elapsed_time_sec = elapsed_time % elapsed_time_min
+        elapsed_time_sec = elapsed_time % minutes
 
-    return dwnld_num, total_size, elapsed_time_min, elapsed_time_sec
+def end_summary():
+    # Declaring global variables
+    global dwnld_num, total_size, minutes, seconds
+
+    # Notify the user that downloads have finished
+    print("\n\n\n    |All downloads to \"%s\" have completed|" % os.path.basename(os.getcwd()))
+    print("_____________________________________________________\n")
+    print("[Nomad]:   Files downloaded: %d" % dwnld_num)
+    print("[Nomad]:   Total download size: %.4f MB" % total_size)
+    print("[Nomad]:   Elapsed time: %d:%.2d" % (minutes, seconds))
+    print("_____________________________________________________\n")
 
 def main():
     # Command-line input validation
@@ -150,9 +160,9 @@ def main():
     total_files = len(containers)
 
     # Creating individual files under they're own name
-    dwnld_num, total_files, minutes, seconds = download(containers, footer_list, user_url, user_dir)
+    download(containers, footer_list, user_url, user_dir)
 
     # Show download summary
-    end_summary(dwnld_num, total_files, minutes, seconds)
+    end_summary()
 
 main()
