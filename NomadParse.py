@@ -47,7 +47,6 @@ def footer(containers):
     return footer_list
     
 def download(containers, footer_list, user_url, user_dir):
-
     # Set global variables
     global dwnld_num, total_size
 
@@ -87,6 +86,9 @@ def download(containers, footer_list, user_url, user_dir):
         # Counts how many files were downloaded
         dwnld_num += 1
 
+    # Download size conversion to MB
+    total_size = float(total_size) / (1000000)
+    
 def end_summary():
     # Declaring global variables
     global dwnld_num, total_size, minutes, seconds
@@ -147,7 +149,6 @@ def main():
     elapsed_time = end_time - start_time
 
     # Unit conversions for final statistics
-    total_size = float(total_size) / (1000000)
     minutes = elapsed_time / 60
     seconds = elapsed_time 
     if (elapsed_time >= 60):
