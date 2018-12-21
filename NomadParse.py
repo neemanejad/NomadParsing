@@ -51,9 +51,6 @@ def download(containers, footer_list, user_url, user_dir):
     # Set global variables
     global dwnld_num, total_size, minutes, seconds
 
-    # Initializing some variables
-    #total_size = 0
-    #dwnld_num = 0
     total_files = len(containers)
 
     # Creating individual files under they're own name
@@ -152,12 +149,6 @@ def main():
     sys.stdout.write("[Nomad]:   Setting up download instance...\n\n")
     sys.stdout.flush()
     footer_list = footer(containers)
-
-    # Initializing some variables
-    total_size = 0
-    dwnld_num = 0
-    exist = 0
-    total_files = len(containers)
 
     # Creating individual files under they're own name
     download(containers, footer_list, user_url, user_dir)
