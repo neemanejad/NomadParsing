@@ -49,12 +49,11 @@ def footer(containers):
 def download(containers, footer_list, user_url, user_dir):
 
     # Set global variables
-    global dwnld_num, total_size, minutes, seconds
+    global dwnld_num, total_size
 
     total_files = len(containers)
 
     # Creating individual files under they're own name
-    start_time = time.time()
     for footer in enumerate(footer_list[:50], start=0):
         # Grabbing current file number
         file_num = footer[0] + 1
@@ -87,17 +86,6 @@ def download(containers, footer_list, user_url, user_dir):
 
         # Counts how many files were downloaded
         dwnld_num += 1
-    end_time = time.time()
-
-    # Calculate elapsed time post download
-    elapsed_time = end_time - start_time
-
-    # Unit conversions for final statistics
-    total_size = float(total_size) / (1000000)
-    minutes = elapsed_time / 60
-    seconds = elapsed_time 
-    if (elapsed_time >= 60):
-        elapsed_time_sec = elapsed_time % minutes
 
 def end_summary():
     # Declaring global variables
@@ -151,7 +139,19 @@ def main():
     footer_list = footer(containers)
 
     # Creating individual files under they're own name
+    start_time = time.time()
     download(containers, footer_list, user_url, user_dir)
+    end_time = time.time()
+
+     # Calculate elapsed time post download
+    elapsed_time = end_time - start_time
+
+    # Unit conversions for final statistics
+    total_size = float(total_size) / (1000000)
+    minutes = elapsed_time / 60
+    seconds = elapsed_time 
+    if (elapsed_time >= 60):
+        elapsed_time_sec = elapsed_time % minutes
 
     # Show download summary
     end_summary()
