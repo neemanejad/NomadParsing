@@ -53,7 +53,7 @@ def download(containers, footer_list, user_url, user_dir):
     total_files = len(containers)
 
     # Creating individual files under they're own name
-    for footer in enumerate(footer_list[:50], start=0):
+    for footer in enumerate(footer_list[:100], start=0):
         # Grabbing current file number
         file_num = footer[0] + 1
 
@@ -102,6 +102,8 @@ def end_summary():
     print("_____________________________________________________\n")
 
 def main():
+    global dwnld_num, total_size, minutes, seconds
+
     # Command-line input validation
     parser = argparse.ArgumentParser()
     parser.add_argument("PATH", help="where you want the files to be downloaded", type=str)
@@ -142,7 +144,19 @@ def main():
 
     # Creating individual files under they're own name
     start_time = time.time()
-    download(containers, footer_list, user_url, user_dir)
+
+    # Creating threads
+    thread_list = []
+    for i in range(10):
+        t = threading.Thread(target=download, name="thread{}".format(i),
+            args=(containers, footer_list, user_url, user_dir))
+        thread_list.append(t)
+        t.start()
+        
+    for t in thread_list:
+        t.join()
+    
+    ###download(containers, footer_list, user_url, user_dir)
     end_time = time.time()
 
      # Calculate elapsed time post download
@@ -154,6 +168,7 @@ def main():
     if (elapsed_time >= 60):
         elapsed_time_sec = elapsed_time % minutes
 
+    #print("Full time: %d:%.2d" % (minutes, seconds))
     # Show download summary
     end_summary()
 
