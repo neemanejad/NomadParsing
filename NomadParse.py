@@ -108,6 +108,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("PATH", help="where you want the files to be downloaded", type=str)
     parser.add_argument("URL", help="URL you want to download files from", type=str)
+    parser.add_argument("THREADS", help="How many threads that will be used during the download", type=int)
     args = parser.parse_args()
 
     # Creates user inputted directory if it doesn't exist
