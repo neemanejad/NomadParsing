@@ -148,7 +148,7 @@ def main():
 
     # Creating threads
     thread_list = []
-    for i in range(10):
+    for i in range(args.THREADS):
         t = threading.Thread(target=download, name="thread{}".format(i),
             args=(containers, footer_list, user_url, user_dir))
         thread_list.append(t)
