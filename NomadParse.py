@@ -47,9 +47,8 @@ def footer(containers):
     return footer_list
     
 def download(containers, footer_list, user_url, user_dir):
-    # Set global variables
+    # Set variables
     global dwnld_num, total_size
-
     total_files = len(containers)
 
     # Creating individual files under they're own name
@@ -61,12 +60,6 @@ def download(containers, footer_list, user_url, user_dir):
 
         # Grabbing current file number
         file_num = footer[0] + 1
-
-        # Display download progress to user
-        progress = (float(file_num) / float(total_files)) * 100
-        sys.stdout.write("[Nomad]:   Downloading to %s: %d/%d | %0.2f%%\r" % 
-            (os.path.basename(user_dir), file_num, total_files, progress))
-        sys.stdout.flush()
 
         # Writing files to current directory
         file = open(footer[1], "wb")
@@ -82,6 +75,12 @@ def download(containers, footer_list, user_url, user_dir):
 
         # Counts how many files were downloaded
         dwnld_num += 1
+
+        # Display download progress to user
+        progress = (float(file_num) / float(total_files)) * 100
+        sys.stdout.write("[Nomad]:   Downloading to %s: %d/%d | %0.2f%%\r" % 
+            (os.path.basename(user_dir), file_num, total_files, progress))
+        sys.stdout.flush()
 
     # Download size conversion to MB
     total_size = float(total_size) / (1000000)
