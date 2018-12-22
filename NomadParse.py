@@ -59,10 +59,6 @@ def download(containers, footer_list, user_url, user_dir):
 
         # Checking if file is already in Directory and displaying progress
         if (os.path.isfile(footer[1]) == True):
-            progress = (float(file_num) / float(total_files)) * 100
-            sys.stdout.write("[Nomad]:   Downloading to %s: %d/%d | %0.2f%%\r" % 
-                (os.path.basename(user_dir), file_num, total_files, progress))
-            sys.stdout.flush()
             continue
 
         # Display download progress to user
