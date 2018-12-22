@@ -53,13 +53,14 @@ def download(containers, footer_list, user_url, user_dir):
     total_files = len(containers)
 
     # Creating individual files under they're own name
-    for footer in enumerate(footer_list, start=0):
-        # Grabbing current file number
-        file_num = footer[0] + 1
+    for footer in enumerate(footer_list[:50]):
 
         # Checking if file is already in Directory and displaying progress
         if (os.path.isfile(footer[1]) == True):
             continue
+
+        # Grabbing current file number
+        file_num = footer[0] + 1
 
         # Display download progress to user
         progress = (float(file_num) / float(total_files)) * 100
