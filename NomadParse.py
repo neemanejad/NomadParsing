@@ -52,7 +52,7 @@ def download(containers, footer_list, user_url, user_dir):
     # Set variables
     global dwnld_num, total_size, total_size_mb
     total_files = len(containers)
-
+    
     # Creating individual files under they're own name
     for footer in enumerate(footer_list[:50]):
         # Checking if file is already in Directory and displaying progress
