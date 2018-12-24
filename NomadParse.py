@@ -3,10 +3,12 @@ from bs4 import BeautifulSoup as soup
 import os, sys, time, requests, argparse, threading
 
 # Global Variables for download statistics
-total_size = 0
 dwnld_num = 0
+total_size = 0
+total_size_mb = 0
 minutes = 0
 seconds = 0
+lock = threading.Lock()
 
 def check_dir(user_dir):
     if (os.path.isdir(user_dir) == False):
@@ -48,18 +50,14 @@ def footer(containers):
     
 def download(containers, footer_list, user_url, user_dir):
     # Set variables
-    global dwnld_num, total_size
+    global dwnld_num, total_size, total_size_mb
     total_files = len(containers)
 
     # Creating individual files under they're own name
     for footer in enumerate(footer_list[:50]):
-
         # Checking if file is already in Directory and displaying progress
         if (os.path.isfile(footer[1]) == True):
             continue
-
-        # Grabbing current file number
-        file_num = footer[0] + 1
 
         # Writing files to current directory
         file = open(footer[1], "wb")
@@ -68,37 +66,46 @@ def download(containers, footer_list, user_url, user_dir):
         file.write(source)
         file.close()
 
+        # Counts how many files were downloaded
+        with lock:
+            dwnld_num += 1
+
+        # Grabbing current file number
+        with lock:
+            file_num = footer[0] + 1
+
         # Getting total size of download
         file_abs_path = os.path.abspath(footer[1])
-        file_size = os.path.getsize(file_abs_path)
-        total_size += file_size
-
-        # Counts how many files were downloaded
-        dwnld_num += 1
+        with lock:
+            file_size = os.path.getsize(file_abs_path)
+            total_size += file_size
+            print("Download description: {} {} {} {}".format(dwnld_num, threading.current_thread(), footer[1], file_size))
 
         # Display download progress to user
-        progress = (float(file_num) / float(total_files)) * 100
-        sys.stdout.write("[Nomad]:   Downloading to %s: %d/%d | %0.2f%%\r" % 
-            (os.path.basename(user_dir), file_num, total_files, progress))
-        sys.stdout.flush()
+        #with lock:
+            #progress = (float(file_num) / float(total_files)) * 100
+            #sys.stdout.write("[Nomad]:   Downloading to %s: %d/%d | %0.2f%%\r" % 
+            #    (os.path.basename(user_dir), file_num, total_files, progress))
+            #sys.stdout.flush()
 
     # Download size conversion to MB
-    total_size = float(total_size) / (1000000)
+        with lock:
+            total_size_mb = float(total_size) / (1000000)
     
 def end_summary():
     # Declaring global variables
-    global dwnld_num, total_size, minutes, seconds
+    global dwnld_num, total_size, total_size_mb, minutes, seconds
 
     # Notify the user that downloads have finished
     print("\n\n\n    |All downloads to \"%s\" have completed|" % os.path.basename(os.getcwd()))
     print("_____________________________________________________\n")
     print("[Nomad]:   Files downloaded: %d" % dwnld_num)
-    print("[Nomad]:   Total download size: %.4f MB" % total_size)
+    print("[Nomad]:   Total download size: %.4f MB" % total_size_mb)
     print("[Nomad]:   Elapsed time: %d:%.2d" % (minutes, seconds))
     print("_____________________________________________________\n")
 
 def main():
-    global dwnld_num, total_size, minutes, seconds
+    global dwnld_num, total_size, total_size_mb, minutes, seconds
 
     # Command-line input validation
     parser = argparse.ArgumentParser()
