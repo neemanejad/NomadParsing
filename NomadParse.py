@@ -48,16 +48,17 @@ def footer(containers):
         footer_list.append(footer_url)
     return footer_list
     
-def download(containers, footer_list, user_url, user_dir):
+def download(footer_list, user_url, user_dir):
     # Set variables
     global dwnld_num, total_size, total_size_mb
-    total_files = len(containers)
+    total_files = len(footer_list)
     
     # Creating individual files under they're own name
     for footer in enumerate(footer_list[:50]):
         # Checking if file is already in Directory and displaying progress
-        if (os.path.isfile(footer[1]) == True):
-            continue
+        with lock:
+            if (os.path.isfile(footer[1]) == True):
+                continue
 
         # Writing files to current directory
         file = open(footer[1], "wb")
@@ -66,31 +67,32 @@ def download(containers, footer_list, user_url, user_dir):
         file.write(source)
         file.close()
 
-        # Counts how many files were downloaded
-        with lock:
-            dwnld_num += 1
-
         # Grabbing current file number
         with lock:
             file_num = footer[0] + 1
+
+        # Counts how many files were downloaded
+        with lock:
+            dwnld_num += 1
 
         # Getting total size of download
         file_abs_path = os.path.abspath(footer[1])
         with lock:
             file_size = os.path.getsize(file_abs_path)
             total_size += file_size
-            print("Download description: {} {} {} {}".format(dwnld_num, threading.current_thread(), footer[1], file_size))
-
-        # Display download progress to user
-        #with lock:
-            #progress = (float(file_num) / float(total_files)) * 100
-            #sys.stdout.write("[Nomad]:   Downloading to %s: %d/%d | %0.2f%%\r" % 
-            #    (os.path.basename(user_dir), file_num, total_files, progress))
-            #sys.stdout.flush()
-
-    # Download size conversion to MB
         with lock:
             total_size_mb = float(total_size) / (1000000)
+
+        # Display download progress to user
+        with lock:
+            progress = (float(file_num) / float(total_files)) * 100
+            sys.stdout.write("[Nomad]:   Downloading to %s: %d/%d | %0.2f%%\r" % 
+                (os.path.basename(user_dir), file_num, total_files, progress))
+            sys.stdout.flush()
+
+    # Download size conversion to MB
+        #with lock:
+            #total_size_mb = float(total_size) / (1000000)
     
 def end_summary():
     # Declaring global variables
@@ -145,21 +147,21 @@ def main():
     sys.stdout.flush()
     footer_list = footer(containers)
 
-    # Creating individual files under they're own name
+    # Starting time
     start_time = time.time()
 
     # Creating threads
     thread_list = []
     for i in range(10):
         t = threading.Thread(target=download, name="thread{}".format(i),
-            args=(containers, footer_list, user_url, user_dir), daemon=True)
+            args=(footer_list, user_url, user_dir), daemon=False)
         thread_list.append(t)
         t.start()
         
     for t in thread_list:
         t.join()
     
-    ###download(containers, footer_list, user_url, user_dir)
+    # Ending time
     end_time = time.time()
 
      # Calculate elapsed time post download
@@ -171,7 +173,6 @@ def main():
     if (elapsed_time >= 60):
         elapsed_time_sec = elapsed_time % minutes
 
-    #print("Full time: %d:%.2d" % (minutes, seconds))
     # Show download summary
     end_summary()
 
