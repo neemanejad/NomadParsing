@@ -72,6 +72,16 @@ def download(footer_list, user_url, user_dir):
                 (os.path.basename(user_dir), file_num, total_files, progress))
             sys.stdout.flush()
 
+def existing_files(footer_list):
+    exist = 0
+    total_size = 0
+    for footer in footer_list:
+        if (os.path.isfile(footer) == True):
+            exist += 1
+            file_size = os.path.getsize(footer)
+            total_size += float(file_size) / 1000000
+    return exist, total_size
+
 def download_stats(footer_list):
     downloads = 0
     total_size = 0
@@ -131,6 +141,9 @@ def main():
     sys.stdout.flush()
     footer_list = footer(containers)
 
+    # See how many files are indirectory before download
+    existing_files, existing_size = existing_files(footer_list)
+
     # Starting time
     start_time = time.time()
 
@@ -144,11 +157,11 @@ def main():
         
     for t in thread_list:
         t.join()
-    
+
     # Ending time
     end_time = time.time()
 
-     # Calculate elapsed time post download
+    # Calculate elapsed time post download
     elapsed_time = end_time - start_time
 
     # Unit conversions for final statistics
@@ -159,12 +172,13 @@ def main():
 
     # Get downloads statistics
     downloads, total_size = download_stats(footer_list)
+    net_downloads = downloads - existing_files
+    net_size = total_size - existing_size
 
     # Show download summary
-    end_summary(downloads, total_size, minutes, seconds)
+    end_summary(net_downloads, net_size, minutes, seconds)
 
 main()
-
 
 ### ERRORS ###
 # urllib.error.HTTPError
