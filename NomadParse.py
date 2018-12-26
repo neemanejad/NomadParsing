@@ -42,7 +42,18 @@ def footer(containers):
         footer_url = container.a["href"]
         footer_list.append(footer_url)
     return footer_list
-    
+
+def existing_files(footer_list):
+    # Count how many files already exist in directory
+    exist = 0
+    total_size = 0
+    for footer in footer_list:
+        if (os.path.isfile(footer) == True):
+            exist += 1
+            file_size = os.path.getsize(footer)
+            total_size += float(file_size) / 1000000
+    return exist, total_size    
+
 def download(footer_list, user_url, user_dir):
     # Get total files
     total_files = len(footer_list)
@@ -72,20 +83,10 @@ def download(footer_list, user_url, user_dir):
                 (os.path.basename(user_dir), file_num, total_files, progress))
             sys.stdout.flush()
 
-def existing_files(footer_list):
-    exist = 0
-    total_size = 0
-    for footer in footer_list:
-        if (os.path.isfile(footer) == True):
-            exist += 1
-            file_size = os.path.getsize(footer)
-            total_size += float(file_size) / 1000000
-    return exist, total_size
-
 def download_stats(footer_list):
+    # Get ending download count and size
     downloads = 0
     total_size = 0
-    # Getting total size of download
     for footer in footer_list:
         if (os.path.isfile(footer) == True):
             downloads += 1
