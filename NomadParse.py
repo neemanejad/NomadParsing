@@ -2,12 +2,7 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup as soup
 import os, sys, time, requests, argparse, threading
 
-# Global Variables for download statistics
-dwnld_num = 0
-total_size = 0
-total_size_mb = 0
-minutes = 0
-seconds = 0
+# Setting lock for multithreaded downloads
 lock = threading.Lock()
 
 def check_dir(user_dir):
@@ -49,8 +44,7 @@ def footer(containers):
     return footer_list
     
 def download(footer_list, user_url, user_dir):
-    # Set variables
-    global dwnld_num, total_size, total_size_mb
+    # Get total files
     total_files = len(footer_list)
     
     # Creating individual files under they're own name
@@ -71,18 +65,6 @@ def download(footer_list, user_url, user_dir):
         with lock:
             file_num = footer[0] + 1
 
-        # Counts how many files were downloaded
-        with lock:
-            dwnld_num += 1
-
-        # Getting total size of download
-        file_abs_path = os.path.abspath(footer[1])
-        with lock:
-            file_size = os.path.getsize(file_abs_path)
-            total_size += file_size
-        with lock:
-            total_size_mb = float(total_size) / (1000000)
-
         # Display download progress to user
         with lock:
             progress = (float(file_num) / float(total_files)) * 100
@@ -90,25 +72,27 @@ def download(footer_list, user_url, user_dir):
                 (os.path.basename(user_dir), file_num, total_files, progress))
             sys.stdout.flush()
 
-    # Download size conversion to MB
-        #with lock:
-            #total_size_mb = float(total_size) / (1000000)
-    
-def end_summary():
-    # Declaring global variables
-    global dwnld_num, total_size, total_size_mb, minutes, seconds
-
+def download_stats(footer_list):
+    downloads = 0
+    total_size = 0
+    # Getting total size of download
+    for footer in footer_list:
+        if (os.path.isfile(footer) == True):
+            downloads += 1
+            file_size = os.path.getsize(footer)
+            total_size += float(file_size) / 1000000
+    return downloads, total_size
+        
+def end_summary(downloads, total_size, minutes, seconds):
     # Notify the user that downloads have finished
     print("\n\n\n    |All downloads to \"%s\" have completed|" % os.path.basename(os.getcwd()))
     print("_____________________________________________________\n")
-    print("[Nomad]:   Files downloaded: %d" % dwnld_num)
-    print("[Nomad]:   Total download size: %.4f MB" % total_size_mb)
+    print("[Nomad]:   Files downloaded: %d" % downloads)
+    print("[Nomad]:   Total download size: %.4f MB" % total_size)
     print("[Nomad]:   Elapsed time: %d:%.2d" % (minutes, seconds))
     print("_____________________________________________________\n")
 
 def main():
-    global dwnld_num, total_size, total_size_mb, minutes, seconds
-
     # Command-line input validation
     parser = argparse.ArgumentParser()
     parser.add_argument("PATH", help="where you want the files to be downloaded", type=str)
@@ -173,7 +157,10 @@ def main():
     if (elapsed_time >= 60):
         elapsed_time_sec = elapsed_time % minutes
 
+    # Get downloads statistics
+    downloads, total_size = download_stats(footer_list)
+
     # Show download summary
-    end_summary()
+    end_summary(downloads, total_size, minutes, seconds)
 
 main()
