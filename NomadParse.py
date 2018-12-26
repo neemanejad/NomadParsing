@@ -169,7 +169,7 @@ def main():
     minutes = elapsed_time / 60
     seconds = elapsed_time 
     if (elapsed_time >= 60):
-        elapsed_time_sec = elapsed_time % minutes
+        seconds = elapsed_time % minutes
 
     # Get downloads statistics
     downloads, total_size = download_stats(footer_list)
