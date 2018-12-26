@@ -48,7 +48,7 @@ def download(footer_list, user_url, user_dir):
     total_files = len(footer_list)
     
     # Creating individual files under they're own name
-    for footer in enumerate(footer_list[:50]):
+    for footer in enumerate(footer_list):
         # Checking if file is already in Directory and displaying progress
         with lock:
             if (os.path.isfile(footer[1]) == True):
@@ -164,3 +164,7 @@ def main():
     end_summary(downloads, total_size, minutes, seconds)
 
 main()
+
+
+### ERRORS ###
+# urllib.error.HTTPError
