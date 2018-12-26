@@ -43,7 +43,7 @@ def footer(containers):
         footer_list.append(footer_url)
     return footer_list
 
-def existing_files(footer_list):
+def existing(footer_list):
     # Count how many files already exist in directory
     exist = 0
     total_size = 0
@@ -143,7 +143,7 @@ def main():
     footer_list = footer(containers)
 
     # See how many files are indirectory before download
-    existing_files, existing_size = existing_files(footer_list)
+    existing_files, existing_size = existing(footer_list)
 
     # Starting time
     start_time = time.time()
