@@ -22,7 +22,7 @@ def check_dir(user_dir):
     return user_dir
 
 def check_url(user_url):
-    sys.stdout.write("[Nomad]:   Checking URL...\n")
+    sys.stdout.write("[Nomad]:   Checking {}\n".format(user_url))
     sys.stdout.flush()
     try:
         r = requests.get(user_url)
@@ -65,7 +65,6 @@ def download(footer_list, user_url, user_dir):
             if (os.path.isfile(footer[1]) == True):
                 continue
 
-
         # Grabbing current file number
         with lock:
             file_num = footer[0] + 1
@@ -100,14 +99,17 @@ def download_stats(footer_list):
             downloads += 1
             file_size = os.path.getsize(footer)
             total_size += float(file_size) / 1000000
-    return downloads, total_size
+    no_download = len(footer_list) - downloads
+    return downloads, total_size, no_download
         
-def end_summary(downloads, total_size, minutes, seconds):
+def end_summary(downloads, total_size, no_downloads, minutes, seconds):
     # Notify the user that downloads have finished
-    print("\n\n\n    |All downloads to \"%s\" have completed|" % os.path.basename(os.getcwd()))
+    print("\n\n    |All downloads to \"%s\" have completed|" % os.path.basename(os.getcwd()))
     print("_____________________________________________________\n")
     print("[Nomad]:   Files downloaded: %d" % downloads)
     print("[Nomad]:   Total download size: %.4f MB" % total_size)
+    if (no_downloads > 0):
+        print("[Nomad]:   Files failed to download: %d".format(no_downloads))
     print("[Nomad]:   Elapsed time: %d:%.2d" % (minutes, seconds))
     print("_____________________________________________________\n")
 
@@ -125,12 +127,12 @@ def main():
     user_url = check_url(args.URL)
 
     # Opening the Client, grabbing the page
-    sys.stdout.write("[Nomad]:   Opening URL...\n")
+    sys.stdout.write("[Nomad]:   Opening URL\n")
     sys.stdout.flush()
     uClient = urlopen(user_url)
 
     # Dumping html code into variable
-    sys.stdout.write("[Nomad]:   Grabbing URL source code...\n")
+    sys.stdout.write("[Nomad]:   Grabbing URL source code\n")
     sys.stdout.flush()
     page_html = uClient.read()
 
@@ -141,12 +143,12 @@ def main():
     page_soup = soup(page_html, "html.parser")
 
     # Organizes each link into an index
-    sys.stdout.write("[Nomad]:   Organizing desired URL elements...\n")
+    sys.stdout.write("[Nomad]:   Organizing desired URL elements\n")
     sys.stdout.flush()
     containers = page_soup.findAll("td",{"valign":"top"})
 
     # Gets all the footers for the download links
-    sys.stdout.write("[Nomad]:   Setting up download instance...\n\n")
+    sys.stdout.write("[Nomad]:   Setting up download instance\n\n")
     sys.stdout.flush()
     footer_list = footer(containers)
 
@@ -180,14 +182,14 @@ def main():
         seconds = elapsed_time % minutes
 
     # Get downloads statistics
-    downloads, total_size = download_stats(footer_list)
+    downloads, total_size, no_downloads = download_stats(footer_list)
     net_downloads = downloads - existing_files
     net_size = total_size - existing_size
 
     # Show download summary
-    end_summary(net_downloads, net_size, minutes, seconds)
+    end_summary(net_downloads, net_size, no_downloads, minutes, seconds)
 
 main()
 
 ### ERRORS ###
-# urllib.error.HTTPError
+# urllib.error.HTTPError 
