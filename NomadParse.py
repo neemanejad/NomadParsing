@@ -76,8 +76,13 @@ def download(footer_list, user_url, user_dir):
             source = urlopen(link).read()
             file.write(source)
             file.close()
-        except:
-            print("[Nomad]:   Check internet connection")
+        except urllib.error.HTTPError:
+            continue
+        except urllib.error.URLError:
+            sys.stdout.write("[Nomad]:   Check internet connection           \r")
+            sys.exit()
+        except OSError:
+            sys.stdout.write("[Nomad]:   Check internet connection           \r")
             sys.exit()
 
         # Grabbing current file number
