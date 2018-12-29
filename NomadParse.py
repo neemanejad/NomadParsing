@@ -77,7 +77,11 @@ def download(footer_list, user_url, user_dir):
             file.write(source)
             file.close()
         except urllib.error.HTTPError:
-            continue
+            print("[Nomad]:   Check internet connection")
+            sys.exit()
+        except TimeoutError:
+            print("[Nomad]:   Check internet connection")
+            sys.exit()
 
         # Grabbing current file number
         with lock:
