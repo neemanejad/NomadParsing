@@ -57,9 +57,6 @@ def existing(footer_list):
 def download(footer_list, user_url, user_dir):
     # Get total files
     total_files = len(footer_list)
-    
-    # Set download error container
-    errors = []
 
     # Creating individual files under they're own name
     for footer in enumerate(footer_list):
@@ -67,6 +64,11 @@ def download(footer_list, user_url, user_dir):
         with lock:
             if (os.path.isfile(footer[1]) == True):
                 continue
+
+
+        # Grabbing current file number
+        with lock:
+            file_num = footer[0] + 1
 
         # Writing files to current directory
         try:
