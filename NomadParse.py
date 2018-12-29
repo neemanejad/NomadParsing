@@ -1,6 +1,6 @@
 from urllib.request import urlopen
 from bs4 import BeautifulSoup as soup
-import os, sys, time, requests, argparse, threading
+import os, sys, time, requests, argparse, threading, urllib
 
 # Setting lock for multithreaded downloads
 lock = threading.Lock()
@@ -58,6 +58,9 @@ def download(footer_list, user_url, user_dir):
     # Get total files
     total_files = len(footer_list)
     
+    # Set download error container
+    errors = []
+
     # Creating individual files under they're own name
     for footer in enumerate(footer_list):
         # Checking if file is already in Directory and displaying progress
@@ -66,11 +69,14 @@ def download(footer_list, user_url, user_dir):
                 continue
 
         # Writing files to current directory
-        file = open(footer[1], "wb")
-        link = user_url + footer[1]
-        source = urlopen(link).read()
-        file.write(source)
-        file.close()
+        try:
+            file = open(footer[1], "wb")
+            link = user_url + footer[1]
+            source = urlopen(link).read()
+            file.write(source)
+            file.close()
+        except urllib.error.HTTPError:
+            continue
 
         # Grabbing current file number
         with lock:
