@@ -152,7 +152,7 @@ def main():
     thread_list = []
     for i in range(10):
         t = threading.Thread(target=download, name="thread{}".format(i),
-            args=(footer_list, user_url, user_dir), daemon=False)
+            args=(footer_list, user_url, user_dir), daemon=True)
         thread_list.append(t)
         t.start()
         
