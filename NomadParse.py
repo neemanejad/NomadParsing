@@ -190,6 +190,3 @@ def main():
     end_summary(net_downloads, net_size, no_downloads, minutes, seconds)
 
 main()
-
-### ERRORS ###
-# urllib.error.HTTPError 
