@@ -70,7 +70,7 @@ def download(footer_list, user_url, user_dir):
             file_num = footer[0] + 1
 
         # Writing files to current directory
-        for i in range(10):
+        while (True):
             try:
                 file = open(footer[1], "wb")
                 link = user_url + footer[1]
@@ -78,18 +78,11 @@ def download(footer_list, user_url, user_dir):
                 file.write(source)
                 file.close()
             except:
-                sys.stdout.write("[Nomad]:   Attempting to reconnect to website...                 \r")
-                time.sleep(1)
-                if (i > 10):
-                    try:
-                        _thread.interrupt_main()
-                    except KeyboardInterrupt:
-                        sys.stdout.write("[Nomad]:   Program timed out                            \r")
-                else:
-                    continue
+                sys.stdout.write("[Nomad]:   Program timed out...                 \r")
+                _thread.interrupt_main()
             else:
                 break
-                
+            
         # Grabbing current file number
         with lock:
             file_num = footer[0] + 1
