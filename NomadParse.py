@@ -81,14 +81,15 @@ def download(footer_list, user_url, user_dir):
                 sys.stdout.write("[Nomad]:   Attempting to reconnect to website...                 \r")
                 time.sleep(1)
                 if (i > 10):
-                    sys.stdout.write("[Nomad]:   Program timed out                            \r")
-                    _thread.interrupt_main()
+                    try:
+                        _thread.interrupt_main()
+                    except KeyboardInterrupt:
+                        sys.stdout.write("[Nomad]:   Program timed out                            \r")
                 else:
                     continue
             else:
                 break
-
-
+                
         # Grabbing current file number
         with lock:
             file_num = footer[0] + 1
