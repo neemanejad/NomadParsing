@@ -70,18 +70,11 @@ def download(footer_list, user_url, user_dir):
             file_num = footer[0] + 1
 
         # Writing files to current directory
-        while (True):
-            try:
-                file = open(footer[1], "wb")
-                link = user_url + footer[1]
-                source = urlopen(link).read()
-                file.write(source)
-                file.close()
-            except:
-                sys.stdout.write("[Nomad]:   Program timed out...                 \r")
-                _thread.interrupt_main()
-            else:
-                break
+        file = open(footer[1], "wb")
+        link = user_url + footer[1]
+        source = urlopen(link).read()
+        file.write(source)
+        file.close()
             
         # Grabbing current file number
         with lock:
