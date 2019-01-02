@@ -1,6 +1,6 @@
 from urllib.request import urlopen
 from bs4 import BeautifulSoup as soup
-import os, sys, time, requests, argparse, threading, urllib
+import os, sys, time, requests, argparse, threading, _thread, urllib
 
 # Setting lock for multithreaded downloads
 lock = threading.Lock()
@@ -22,7 +22,7 @@ def check_dir(user_dir):
     return user_dir
 
 def check_url(user_url):
-    sys.stdout.write("[Nomad]:   Checking {}\n".format(user_url))
+    sys.stdout.write("[Nomad]:   Checking \"{}\"\n".format(user_url))
     sys.stdout.flush()
     try:
         r = requests.get(user_url)
@@ -70,20 +70,25 @@ def download(footer_list, user_url, user_dir):
             file_num = footer[0] + 1
 
         # Writing files to current directory
-        try:
-            file = open(footer[1], "wb")
-            link = user_url + footer[1]
-            source = urlopen(link).read()
-            file.write(source)
-            file.close()
-        except urllib.error.HTTPError:
-            continue
-        except urllib.error.URLError:
-            sys.stdout.write("[Nomad]:   Check internet connection           \r")
-            sys.exit()
-        except OSError:
-            sys.stdout.write("[Nomad]:   Check internet connection           \r")
-            sys.exit()
+        init_time = time.time()
+        while (1):
+            try:
+                file = open(footer[1], "wb")
+                link = user_url + footer[1]
+                source = urlopen(link).read()
+                file.write(source)
+                file.close()
+            except:
+                sys.stdout.write("[Nomad]:   Attempting to reconnect to website...                 \r")
+                run_time = time.time()
+                if ((run_time - init_time) > 10):
+                    sys.stdout.write("[Nomad]:   Program timed out                            \r")
+                    _thread.interrupt_main()
+                else:
+                    continue
+            else:
+                break
+
 
         # Grabbing current file number
         with lock:
