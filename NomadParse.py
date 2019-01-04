@@ -54,10 +54,6 @@ def existing(footer_list):
             total_size += float(file_size) / 1000000
     return exist, total_size   
 
-def exit_nomad():
-    print("[Nomad]:   Check internet connection                         ")
-    _thread.interrupt_main()
-
 def download(footer_list, user_url, user_dir):
     # Get total files
     total_files = len(footer_list)
@@ -74,16 +70,12 @@ def download(footer_list, user_url, user_dir):
             file_num = footer[0] + 1
 
         # Writing files to current directory
-        try:
-            file = open(footer[1], "wb")
-            link = user_url + footer[1]
-            source = urlopen(link, timeout=15).read()
-            file.write(source)
-            file.close()
-        except:
-            exit_nomad()
+        file = open(footer[1], "wb")
+        link = user_url + footer[1]
+        source = urlopen(link).read()
+        file.write(source)
+        file.close()
 
-            
         # Grabbing current file number
         with lock:
             file_num = footer[0] + 1
@@ -169,8 +161,12 @@ def main():
         t = threading.Thread(target=download, name="thread{}".format(i),
             args=(footer_list, user_url, user_dir), daemon=True)
         thread_list.append(t)
+
+    # Starting threads
+    for t in thread_list:
         t.start()
         
+    # Ending threads
     for t in thread_list:
         t.join()
 
