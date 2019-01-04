@@ -74,11 +74,15 @@ def download(footer_list, user_url, user_dir):
             file_num = footer[0] + 1
 
         # Writing files to current directory
-        file = open(footer[1], "wb")
-        link = user_url + footer[1]
-        source = urlopen(link).read()
-        file.write(source)
-        file.close()
+        try:
+            file = open(footer[1], "wb")
+            link = user_url + footer[1]
+            source = urlopen(link, timeout=15).read()
+            file.write(source)
+            file.close()
+        except:
+            exit_nomad()
+
             
         # Grabbing current file number
         with lock:
