@@ -74,11 +74,14 @@ def download(footer_list, user_url, user_dir):
                 continue
 
         # Writing files to current directory
-        file = open(footer[1], "wb")
-        link = user_url + footer[1]
-        source = urlopen(link).read()
-        file.write(source)
-        file.close()
+        try:
+            file = open(footer[1], "wb")
+            link = user_url + footer[1]
+            source = urlopen(link).read()
+            file.write(source)
+            file.close()
+        except:
+            continue
 
         # Grabbing current file number
         dwnld_count = file_progress_count(footer_list)
@@ -86,7 +89,7 @@ def download(footer_list, user_url, user_dir):
         # Display download progress to user
         with lock:
             progress = (float(dwnld_count) / float(total_files)) * 100
-            sys.stdout.write("[Nomad]:   Downloading to %s: %d/%d | %0.2f%%\r" % 
+            sys.stdout.write("[Nomad]:   Downloading to %s: %d/%d | %0.2f%% | %d:%.2d\r" % 
                 (os.path.basename(user_dir), dwnld_count, total_files, progress))
             sys.stdout.flush()
 
@@ -109,7 +112,7 @@ def end_summary(downloads, total_size, no_downloads, minutes, seconds):
     print("[Nomad]:   Files downloaded: %d" % downloads)
     print("[Nomad]:   Total download size: %.4f MB" % total_size)
     if (no_downloads > 0):
-        print("[Nomad]:   Files failed to download: %d".format(no_downloads))
+        print("[Nomad]:   Files failed to download: {}".format(no_downloads))
     print("[Nomad]:   Elapsed time: %d:%.2d" % (minutes, seconds))
     print("_____________________________________________________\n")
 
