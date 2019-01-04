@@ -52,7 +52,11 @@ def existing(footer_list):
             exist += 1
             file_size = os.path.getsize(footer)
             total_size += float(file_size) / 1000000
-    return exist, total_size    
+    return exist, total_size   
+
+def exit_nomad():
+    print("[Nomad]:   Check internet connection                         ")
+    _thread.interrupt_main()
 
 def download(footer_list, user_url, user_dir):
     # Get total files
