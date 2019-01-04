@@ -85,14 +85,13 @@ def download(footer_list, user_url, user_dir):
         file.close()
 
         # Grabbing current file number
-        with lock:
-            file_num = footer[0] + 1
+        dwnld_count = file_progress_count(footer_list)
 
         # Display download progress to user
         with lock:
             progress = (float(file_num) / float(total_files)) * 100
             sys.stdout.write("[Nomad]:   Downloading to %s: %d/%d | %0.2f%%\r" % 
-                (os.path.basename(user_dir), file_progress_count(footer_list), total_files, progress))
+                (os.path.basename(user_dir), dwnld_count, total_files, progress))
             sys.stdout.flush()
 
 def download_stats(footer_list):
