@@ -54,6 +54,14 @@ def existing(footer_list):
             total_size += float(file_size) / 1000000
     return exist, total_size   
 
+def file_progress_count(footer_list):
+    # Get ending download count and size
+    downloads = 0
+    for footer in footer_list:
+        if (os.path.isfile(footer) == True):
+            downloads += 1
+    return downloads
+
 def download(footer_list, user_url, user_dir):
     # Get total files
     total_files = len(footer_list)
@@ -84,7 +92,7 @@ def download(footer_list, user_url, user_dir):
         with lock:
             progress = (float(file_num) / float(total_files)) * 100
             sys.stdout.write("[Nomad]:   Downloading to %s: %d/%d | %0.2f%%\r" % 
-                (os.path.basename(user_dir), file_num, total_files, progress))
+                (os.path.basename(user_dir), file_progress_count(footer_list), total_files, progress))
             sys.stdout.flush()
 
 def download_stats(footer_list):
