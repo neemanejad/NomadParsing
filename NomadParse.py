@@ -73,10 +73,6 @@ def download(footer_list, user_url, user_dir):
             if (os.path.isfile(footer[1]) == True):
                 continue
 
-        # Grabbing current file number
-        with lock:
-            file_num = footer[0] + 1
-
         # Writing files to current directory
         file = open(footer[1], "wb")
         link = user_url + footer[1]
@@ -89,7 +85,7 @@ def download(footer_list, user_url, user_dir):
 
         # Display download progress to user
         with lock:
-            progress = (float(file_num) / float(total_files)) * 100
+            progress = (float(dwnld_count) / float(total_files)) * 100
             sys.stdout.write("[Nomad]:   Downloading to %s: %d/%d | %0.2f%%\r" % 
                 (os.path.basename(user_dir), dwnld_count, total_files, progress))
             sys.stdout.flush()
