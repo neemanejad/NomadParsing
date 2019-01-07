@@ -80,8 +80,12 @@ def download(footer_list, user_url, user_dir):
             source = urlopen(link).read()
             file.write(source)
             file.close()
-        except:
-            continue
+        except urllib.error.HTTPError:
+            try:
+                os.remove(footer[1])
+                continue
+            except FileNotFoundError:
+                continue
 
         # Grabbing current file number
         dwnld_count = file_progress_count(footer_list)
