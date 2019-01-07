@@ -86,6 +86,12 @@ def download(footer_list, user_url, user_dir):
                 continue
             except FileNotFoundError:
                 continue
+        except:
+            sys.stdout.write("[Nomad]:   Website is unreachable                      \r")
+            try:
+                _thread.interrupt_main()
+            except:
+                sys.stdout.write("[Nomad]:   Program has closed                      \r")
 
         # Grabbing current file number
         dwnld_count = file_progress_count(footer_list)
