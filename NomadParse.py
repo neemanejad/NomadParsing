@@ -1,6 +1,6 @@
 from urllib.request import urlopen
 from bs4 import BeautifulSoup as soup
-import os, sys, time, requests, argparse, threading, _thread, urllib
+import os, sys, time, requests, argparse, threading, urllib, ssl, multiprocessing
 
 def check_dir(user_dir):
     if (os.path.isdir(user_dir) == False):
@@ -25,11 +25,11 @@ def check_url(user_url):
         r = requests.get(user_url)
     except:
         print("[Nomad]:   URL does not exist or unreachable\n"
-            "[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
+              "[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
         sys.exit()
     if (r.status_code != 200):
         print("[Nomad]:   URL does not exist or unreachable\n"
-            "[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
+              "[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
         sys.exit()
     return user_url
 
@@ -49,7 +49,7 @@ def existing(footer_list):
             exist += 1
             file_size = os.path.getsize(footer)
             total_size += float(file_size) / 1000000
-    return exist, total_size   
+    return exist, total_size
 
 def file_progress_count(footer_list):
     # Get ending download count and size
@@ -68,30 +68,27 @@ def download(footer_list, user_url, user_dir):
         # Checking if file is already in Directory and displaying progress
         if (os.path.isfile(footer[1]) == True):
             continue
-        
+
+        # Bypass SSL error
+        context = ssl._create_unverified_context()
+
         # Writing files to current directory
         try:
             file = open(footer[1], "wb")
             link = user_url + footer[1]
-            source = urlopen(link).read()
+            source = urlopen(link, context=context).read()
             file.write(source)
             file.close()
-        except urllib.error.HTTPError:
+        except:
             continue
-        except TimeoutError:
-            break
-        except OSError:
-            break
-        except urllib.error.URLError:
-            break
 
         # Grabbing current file number
         dwnld_count = file_progress_count(footer_list)
 
         # Display download progress to user
         progress = (float(dwnld_count) / float(total_files)) * 100
-        sys.stdout.write("[Nomad]:   Downloading to %s: %d/%d | %0.2f%%           \r" % 
-            (os.path.basename(user_dir), dwnld_count, total_files, progress))
+        sys.stdout.write("[Nomad]:   Downloading to %s: %d/%d | %0.2f%%           \r" %
+                         (os.path.basename(user_dir), dwnld_count, total_files, progress))
         sys.stdout.flush()
 
 def download_stats(footer_list):
@@ -109,7 +106,7 @@ def download_stats(footer_list):
                 total_size += float(file_size) / 1000000
     no_download = len(footer_list) - downloads
     return downloads, total_size, no_download
-        
+
 def end_summary(downloads, total_size, no_downloads, minutes, seconds):
     # Notify the user that downloads have finished
     print("       |Download Statistics for \"%s\"|              " % os.path.basename(os.getcwd()))
@@ -137,7 +134,8 @@ def main():
     # Opening the Client, grabbing the page
     sys.stdout.write("[Nomad]:   Opening URL\n")
     sys.stdout.flush()
-    uClient = urlopen(user_url)
+    context = ssl._create_unverified_context()
+    uClient = urlopen(user_url, context=context)
 
     # Dumping html code into variable
     sys.stdout.write("[Nomad]:   Grabbing URL source code\n")
@@ -153,14 +151,14 @@ def main():
     # Organizes each link into an index
     sys.stdout.write("[Nomad]:   Organizing desired URL elements\n")
     sys.stdout.flush()
-    containers = page_soup.findAll("td",{"valign":"top"})
+    containers = page_soup.findAll("td", {"valign": "top"})
 
     # Gets all the footers for the download links
     sys.stdout.write("[Nomad]:   Setting up download instance\n\n")
     sys.stdout.flush()
     footer_list = footer(containers)
 
-    # See how many files are indirectory before download
+    # See how many files are in directory before download
     existing_files, existing_size = existing(footer_list)
 
     # Starting time
@@ -169,14 +167,13 @@ def main():
     # Creating threads
     thread_list = []
     for i in range(15):
-        t = threading.Thread(target=download, name="thread{}".format(i),
-            args=(footer_list, user_url, user_dir), daemon=True)
-        thread_list.append(t)
-        t.start()
-        
+        p = multiprocessing.Process(target=download, args=(footer_list, user_url, user_dir))
+        thread_list.append(p)
+        p.start()
+
     # Ending threads
-    for t in thread_list:
-        t.join()
+    for p in thread_list:
+        p.join()
 
     # Ending time
     end_time = time.time()
@@ -186,7 +183,7 @@ def main():
 
     # Unit conversions for final statistics
     minutes = elapsed_time / 60
-    seconds = elapsed_time 
+    seconds = elapsed_time
     if (elapsed_time >= 60):
         seconds = elapsed_time % minutes
 
