@@ -70,10 +70,12 @@ def download(footer_list, user_url, user_dir):
             continue
         
         # Writing files to current directory
-        file = open(footer[1], "wb")
-        link = user_url + footer[1]
         try:
+            file = open(footer[1], "wb")
+            link = user_url + footer[1]
             source = urlopen(link).read()
+            file.write(source)
+            file.close()
         except urllib.error.HTTPError:
             continue
         except TimeoutError:
@@ -82,8 +84,6 @@ def download(footer_list, user_url, user_dir):
             break
         except urllib.error.URLError:
             break
-        file.write(source)
-        file.close()
 
         # Grabbing current file number
         dwnld_count = file_progress_count(footer_list)
