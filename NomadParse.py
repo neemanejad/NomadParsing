@@ -2,9 +2,6 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup as soup
 import os, sys, time, requests, argparse, threading, _thread, urllib
 
-# Setting lock for multithreaded downloads
-lock = threading.Lock()
-
 def check_dir(user_dir):
     if (os.path.isdir(user_dir) == False):
         try:
@@ -68,14 +65,9 @@ def download(footer_list, user_url, user_dir):
 
     # Creating individual files under they're own name
     for footer in enumerate(footer_list):
-        # See if thread needs to abort
-        if (signal != 0):
-            break
-
         # Checking if file is already in Directory and displaying progress
-        with lock:
-            if (os.path.isfile(footer[1]) == True):
-                continue
+        if (os.path.isfile(footer[1]) == True):
+            continue
 
         # Writing files to current directory
         try:
@@ -98,11 +90,10 @@ def download(footer_list, user_url, user_dir):
         dwnld_count = file_progress_count(footer_list)
 
         # Display download progress to user
-        with lock:
-            progress = (float(dwnld_count) / float(total_files)) * 100
-            sys.stdout.write("[Nomad]:   Downloading to %s: %d/%d | %0.2f%%           \r" % 
-                (os.path.basename(user_dir), dwnld_count, total_files, progress))
-            sys.stdout.flush()
+        progress = (float(dwnld_count) / float(total_files)) * 100
+        sys.stdout.write("[Nomad]:   Downloading to %s: %d/%d | %0.2f%%           \r" % 
+            (os.path.basename(user_dir), dwnld_count, total_files, progress))
+        sys.stdout.flush()
 
 def download_stats(footer_list):
     # Get ending download count and size
@@ -122,7 +113,7 @@ def download_stats(footer_list):
         
 def end_summary(downloads, total_size, no_downloads, minutes, seconds):
     # Notify the user that downloads have finished
-    print("          |Download Statistics for \"%s\"|              " % os.path.basename(os.getcwd()))
+    print("       |Download Statistics for \"%s\"|              " % os.path.basename(os.getcwd()))
     print("_____________________________________________________\n")
     print("[Nomad]:   Files downloaded: %d" % downloads)
     print("[Nomad]:   Total download size: %.4f MB" % total_size)
