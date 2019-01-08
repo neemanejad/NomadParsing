@@ -106,9 +106,13 @@ def download_stats(footer_list):
     total_size = 0
     for footer in footer_list:
         if (os.path.isfile(footer) == True):
-            downloads += 1
-            file_size = os.path.getsize(footer)
-            total_size += float(file_size) / 1000000
+            if (os.path.getsize(footer) == 0):
+                os.remove(footer)
+                continue
+            else:
+                downloads += 1
+                file_size = os.path.getsize(footer)
+                total_size += float(file_size) / 1000000
     no_download = len(footer_list) - downloads
     return downloads, total_size, no_download
         
