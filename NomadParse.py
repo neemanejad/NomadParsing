@@ -68,23 +68,22 @@ def download(footer_list, user_url, user_dir):
         # Checking if file is already in Directory and displaying progress
         if (os.path.isfile(footer[1]) == True):
             continue
-
+        
         # Writing files to current directory
+        file = open(footer[1], "wb")
+        link = user_url + footer[1]
         try:
-            file = open(footer[1], "wb")
-            link = user_url + footer[1]
             source = urlopen(link).read()
-            file.write(source)
-            file.close()
         except urllib.error.HTTPError:
-            try:
-                os.remove(footer[1])
-                continue
-            except FileNotFoundError:
-                continue
-        except:
-            sys.stdout.write("[Nomad]:   Check internet connection                  \r")
+            continue
+        except TimeoutError:
             break
+        except OSError:
+            break
+        except urllib.error.URLError:
+            break
+        file.write(source)
+        file.close()
 
         # Grabbing current file number
         dwnld_count = file_progress_count(footer_list)
