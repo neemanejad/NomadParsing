@@ -89,22 +89,22 @@ def download(footer_list, user_url, user_dir):
             source = urlopen(link, context=context).read()
             file.write(source)
             file.close()
-        except urllib.error.URLError:
+        except urllib.error.HTTPError:
             del_file(footer[1])
             continue
         except OSError:
             del_file(footer[1])
-            continue
-        except urllib.error.HTTPError:
+            break
+        except urllib.error.URLError:
             del_file(footer[1])
-            continue
+            break
 
         # Grabbing current file number
         dwnld_count = file_progress_count(footer_list)
 
         # Display download progress to user
         progress = (float(dwnld_count) / float(total_files)) * 100
-        sys.stdout.write("[Nomad]:   Downloading to %s: %d/%d | %0.2f%%           \r" %
+        sys.stdout.write('[Nomad]:   Downloading to %s: %d/%d | %0.2f%%           \r' %
                          (os.path.basename(user_dir), dwnld_count, total_files, progress))
         sys.stdout.flush()
 
