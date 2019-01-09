@@ -60,6 +60,15 @@ def file_progress_count(footer_list):
     return downloads
 
 
+def del_file(file):
+    while True:
+        try:
+            os.remove(file)
+            break
+        except FileNotFoundError:
+            break
+
+
 def download(footer_list, user_url, user_dir):
     # Get total files
     total_files = len(footer_list)
@@ -80,11 +89,15 @@ def download(footer_list, user_url, user_dir):
             source = urlopen(link, context=context).read()
             file.write(source)
             file.close()
-        except:
-            try:
-                os.remove(footer[1])
-            except FileNotFoundError:
-                continue
+        except urllib.error.URLError:
+            del_file(footer[1])
+            continue
+        except OSError:
+            del_file(footer[1])
+            continue
+        except urllib.error.HTTPError:
+            del_file(footer[1])
+            continue
 
         # Grabbing current file number
         dwnld_count = file_progress_count(footer_list)
