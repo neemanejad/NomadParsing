@@ -73,8 +73,14 @@ def download(footer_list, user_url, user_dir):
     # Get total files
     total_files = len(footer_list)
 
+    i = 0 
+
     # Creating individual files under they're own name
     for footer in enumerate(footer_list):
+        # Checks if any network errors were raised
+        if i != 0:
+            break
+
         # Checking if file is already in Directory and displaying progress
         if os.path.isfile(footer[1]):
             continue
@@ -94,10 +100,12 @@ def download(footer_list, user_url, user_dir):
             continue
         except OSError:
             del_file(footer[1])
-            break
+            i = 1
+            continue
         except urllib.error.URLError:
             del_file(footer[1])
-            break
+            i = 1
+            continue
 
         # Grabbing current file number
         dwnld_count = file_progress_count(footer_list)
