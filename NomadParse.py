@@ -137,7 +137,7 @@ def download_stats(footer_list):
 
 def end_summary(downloads, total_size, no_downloads, minutes, seconds):
     # Notify the user that downloads have finished
-    print("       |Download Statistics for \"%s\"|              " % os.path.basename(os.getcwd()))
+    print("       |Download Summary for \"%s\"|              " % os.path.basename(os.getcwd()))
     print("_____________________________________________________\n")
     print("[Nomad]:   Files downloaded: %d" % downloads)
     print("[Nomad]:   Total download size: %.4f MB" % total_size)
