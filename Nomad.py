@@ -4,18 +4,23 @@ import sys, time, argparse, threading
 import massDownload, filteredDownload
 
 def selectURL(websiteList):
-    print("==========WEBSITE LIST==========")
+    while (1):
+        print("==========WEBSITE LIST==========")
 
-    # Print list of currently supported websites
-    for website in enumerate(websiteList):
-        print(str(website[0]) + ". " + website[1])
+        numOfWebsites = 0
+        # Print list of currently supported websites
+        for website in enumerate(websiteList):
+            print(str(website[0]) + ". " + website[1])
+            numOfWebsites += 1
 
-    choice = input("[Nomad]:   Select website (type number): ")
+        choice = input("[Nomad]:   Select website (type number): ")
+        if int(choice) > numOfWebsites - 1 or int(choice) < 0:
+            print("[Nomad]:   Error, type a number that exists in the list\n")
+            continue
+        else:
+            break
 
-    if choice == 0:
-        return websiteList[0]
-    elif choice == 1:
-        return websiteList[1]
+    return websiteList[int(choice)]
 
 def massDownloader():
     # perform mass download configuration
@@ -40,6 +45,9 @@ def main():
     websiteList = ["https://nomads.ncdc.noaa.gov/data/ndfd/201809/20180908/",
                    "https://www.cnrfc.noaa.gov/arc_search.php"]
     userUrl = selectURL(websiteList)
+
+    # # Check if URL is responsive
+    # userUrl = massDownload.check_url(userUrl)
 
     # Opening the Client, grabbing the page
     sys.stdout.write("[Nomad]:   Opening URL...\n")

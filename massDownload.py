@@ -23,12 +23,10 @@ def check_url(user_url):
     try:
         r = requests.get(user_url)
     except:
-        print("[Nomad]:   URL does not exist or unreachable\n"
-            "[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
+        print("[Nomad]:   URL does not exist or unreachable\n")
         sys.exit()
     if (r.status_code != 200):
-        print("[Nomad]:   URL does not exist or unreachable\n"
-            "[Nomad]:   Usage: ./NomadParse [PATH] [URL]")
+        print("[Nomad]:   URL does not exist or unreachable\n")
         sys.exit()
     return user_url
 
