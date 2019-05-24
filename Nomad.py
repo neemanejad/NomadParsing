@@ -4,13 +4,13 @@ import sys, time, argparse, threading
 import massDownload, filteredDownload
 
 def selectURL(websiteList):
-    print("[Nomad]:   Select website (type number of desired website): ")
+    print("==========WEBSITE LIST==========")
 
     # Print list of currently supported websites
     for website in enumerate(websiteList):
-        print("     " + str(website[0]) + ". " + website[1])
+        print(str(website[0]) + ". " + website[1])
 
-    choice = input()
+    choice = input("[Nomad]:   Select website (type number): ")
 
     if choice == 0:
         return websiteList[0]
@@ -44,7 +44,7 @@ def main():
     # Opening the Client, grabbing the page
     sys.stdout.write("[Nomad]:   Opening URL...\n")
     sys.stdout.flush()
-    uClient = urlopen(userUrl)
+    uClient = urlopen(url=userUrl, timeout=120)
 
     # Dumping html code into variable
     sys.stdout.write("[Nomad]:   Grabbing URL source code...\n")
