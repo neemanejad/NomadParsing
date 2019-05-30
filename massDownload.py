@@ -76,6 +76,8 @@ def download(footer_list, user_url, user_dir):
             file.close()
         except urllib.error.HTTPError:
             continue
+        except urllib.error.URLError:
+            continue
 
         # Grabbing current file number
         with lock:
@@ -84,7 +86,7 @@ def download(footer_list, user_url, user_dir):
         # Display download progress to user
         with lock:
             progress = (float(file_num) / float(total_files)) * 100
-            sys.stdout.write("[Nomad]:   Downloading to %s: %d/%d | %0.2f%%\r" %
+            sys.stdout.write("\r[Nomad]:   Downloading to %s: %d/%d | %0.2f%%" %
                 (os.path.basename(user_dir), file_num, total_files, progress))
             sys.stdout.flush()
 
