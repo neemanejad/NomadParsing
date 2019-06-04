@@ -37,7 +37,7 @@ def main():
     args = parser.parse_args()
 
     # Creates user inputted directory if it doesn't exist
-    user_dir = massDownload.check_dir(args.PATH)
+    user_dir = massDownload.check.check_dir(args.PATH)
 
     # Lists websites to select from
     websiteList = ["https://nomads.ncdc.noaa.gov/data/ndfd/201809/20180908/",

@@ -105,10 +105,10 @@ def massDownload(userUrl, user_dir):
     # Gets all the footers for the download links
     sys.stdout.write("[Nomad]:   Setting up download instance...\n\n")
     sys.stdout.flush()
-    footer_list = massDownload.footer(containers)
+    footer_list = footer(containers)
 
     # See how many files are indirectory before download
-    existing_files, existing_size = massDownload.existing(footer_list)
+    existing_files, existing_size = existing(footer_list)
 
     # Starting time
     start_time = time.time()
@@ -116,7 +116,7 @@ def massDownload(userUrl, user_dir):
     # Creating threads
     thread_list = []
     for i in range(10):
-        t = threading.Thread(target=massDownload.download, name="thread{}".format(i),
+        t = threading.Thread(target=download, name="thread{}".format(i),
                              args=(footer_list, userUrl, user_dir), daemon=True)
         thread_list.append(t)
         t.start()
