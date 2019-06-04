@@ -69,10 +69,10 @@ def download(footer_list, user_url, user_dir):
             continue
 
         # Display download progress to user
-        numOfFiles = len(os.listdir(os.getcwd()))
-        progress = (numOfFiles / float(total_files)) * 100
+        fileNum = footer[0] + 1
+        progress = (fileNum / float(total_files)) * 100
         sys.stdout.write("\r[Nomad]:   Downloading to %s: %d/%d | %0.2f%%" %
-                         (os.path.basename(user_dir), numOfFiles, total_files, progress))
+                         (os.path.basename(os.getcwd()), fileNum, total_files, progress))
         sys.stdout.flush()
 
 def filteredDownload(userUrl, user_dir):
@@ -113,6 +113,7 @@ def filteredDownload(userUrl, user_dir):
 
 
         download(newFooterList, userUrl, user_dir)
+        print("\n")
 
 
 
