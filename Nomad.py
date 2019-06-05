@@ -1,5 +1,5 @@
 import sys, time, argparse, threading
-import massDownload, filteredDownload
+import massDownload, filteredDownload, check
 
 def selectURL(websiteList):
     while (1):
@@ -10,6 +10,9 @@ def selectURL(websiteList):
         for website in enumerate(websiteList):
             print(str(website[0]) + ". " + website[1])
             numOfWebsites += 1
+
+        # input validation for user given directory
+        check.check_dir(sys.argv[1])
 
         choice = input("[Nomad]:   Select website (type number): ")
         if int(choice) > numOfWebsites - 1 or int(choice) < 0:
