@@ -12,9 +12,22 @@ def footer(containers):
 
 def getYearAndMonth():
     monthList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-    print("\n==========SELECT DATE==========")
-    month, year = input("[Nomad]:   Enter month (01-12) and year (2001-2019) in the form (MM YYYY): ").split()
-    month = int(month)
+    while(1):
+        try:
+            print("\n==========SELECT DATE==========")
+            month, year = input("[Nomad]:   Enter month (01-12) and year (2001-2019) in the form (MM YYYY): ").split()
+            month = int(month)
+            if month < 1 or month > 12:
+                print("[Nomad]:   ERROR - month must be between 01-12")
+                continue
+            elif int(year) < 2001 or int(year) > 2019:
+                print("[Nomad]:   ERROR - year must be between 2001-2019")
+                continue
+        except ValueError:
+            print("[Nomad]:   ERROR - date requires the month and year in the form (MM YYYY)")
+            continue
+        break
+
 
     month = monthList[month - 1]
     return month, year
@@ -61,10 +74,15 @@ def listAllProducts(userUrl, month, year):
         print("%d.  %s" % (product[0] + 1, product[1]))
 
     # select all wanted products
-    wantedProductsIndices = []
-    selectedProducts = input("[Nomad]:   Select all desired products (using numbers, i.g. 1 32 24): ").split(" ")
-    for product in selectedProducts:
-        wantedProductsIndices.append(int(product) - 1)
+    while(1):
+        wantedProductsIndices = []
+        selectedProducts = input("\n[Nomad]:   Select all desired products (using numbers, i.g. 1 32 24): ").strip(" ").split(" ")
+        for productNum in selectedProducts:
+            if int(productNum) > len(products) or int(productNum) < 0:
+                print("[Nomad]:   ERROR - product number %d doesn't exist, it won't be downloaded" % int(productNum))
+                continue
+            wantedProductsIndices.append(int(productNum) - 1)
+        break
 
     wantedProducts = []
     for i in wantedProductsIndices:
