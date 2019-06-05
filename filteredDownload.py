@@ -18,34 +18,51 @@ def getYearAndMonth():
     month = monthList[month - 1]
     return month, year
 
-# def listAllProducts(userUrl):
-#     # get year and month
-#     month, year = getYearAndMonth()
-#
-#     # make dictionary for all post request info
-#     post = {"theprod": "xxx", "yyyy": year, "mon": month, "view_all": "yes",
-#             "day1": "1", "day2": "31", "output": "single", "button": "  Search CNRFC Archive  "}
-#     encodedData = parse.urlencode(post).encode("utf-8")
-#     print("[Nomad]:   Sending request to %s" % userUrl)
-#     pageRequest = urllib.request.Request(userUrl)
-#     print("[Nomad]:   Opening %s" % userUrl)
-#     page = urlopen(pageRequest, data=encodedData, timeout=120)
-#
-#     # Dumping html code into variable
-#     page_html = page.read()
-#
-#     # Closing client
-#     page.close()
-#
-#     # Does the html parsing
-#     page_soup = soup(page_html, "html.parser")
-#
-#     # Organizes each link into an index
-#     containers = page_soup.findAll("td", {"valign": "top"})
-#     productList = footer(containers)
-#     dummy = 0
+def listAllProducts(userUrl, month, year):
+    # make dictionary for all post request info
+    post = {"theprod": "xxx", "yyyy": year, "mon": month, "view_all": "yes",
+            "day1": "1", "day2": "31", "output": "single", "button": "  Search CNRFC Archive  "}
 
-def download(footer_list, user_url, user_dir):
+    # send post request to website
+    encodedData = parse.urlencode(post).encode("utf-8")
+    pageRequest = urllib.request.Request(userUrl)
+    page = urlopen(pageRequest, data=encodedData, timeout=120)
+
+    # Dumping html code into variable
+    page_html = page.read()
+
+    # Closing client
+    page.close()
+
+    # Does the html parsing
+    page_soup = soup(page_html, "html.parser")
+
+    # Organizes each link into an index
+    containers = page_soup.findAll("optgroup", {"class": "searchtextul"})
+
+    # get list of all product names
+    productList = []
+    for container in containers:
+        for content in enumerate(container.contents):
+            # skip odd indices
+            if content[0] % 2 == 0:
+                continue
+            productName = content[1]
+            productList.append(productName)
+        productList.pop(-1)
+
+    # Display names of all products
+    for product in enumerate(productList):
+        print("%d.  %s" % (product[0] + 1, product[1]))
+
+    # select all wanted products
+    wantedProducts = []
+    selectedProducts = input("[Nomad]:   Select all desired products (using numbers): ")
+
+
+    return wantedProducts
+
+def download(footer_list, user_url):
     # Get total files
     total_files = len(footer_list)
 
@@ -63,11 +80,13 @@ def download(footer_list, user_url, user_dir):
         if (os.path.isfile(footer[1]) == True):
             continue
 
+        # create full file url
+        link = user_url + footer[1]
+
         # Writing files to current directory
         try:
             file = open(footer[1], "wb")
-            link = user_url + footer[1]
-            source = urlopen(link).read()
+            source = urlopen(link, timeout=120).read()
             file.write(source)
             file.close()
         except urllib.error.HTTPError:
@@ -75,12 +94,15 @@ def download(footer_list, user_url, user_dir):
         except urllib.error.URLError:
             print("[Nomad]:   ERROR downloading %s                           \n", footer[1])
             continue
+        except ConnectionResetError:
+            print("\n[Nomad]:   ERROR - connection was forcibly closed by remote host")
 
 
 def filteredDownload(userUrl, user_dir):
     #products = listAllProducts(userUrl)
     month, year = getYearAndMonth()
-    wantedProducts = ["netcdfqpe", "netcdfqpf", "netcdfMaxT", "netcdfMinT", "netcdfot"]
+
+    wantedProducts = listAllProducts(userUrl, month, year)
     for product in wantedProducts:
         # Create and open url for product
         userUrl = userUrl + "?myyear=" + year + "&mymon=" + month + "&output=single&myprod=" + product
@@ -113,11 +135,16 @@ def filteredDownload(userUrl, user_dir):
             if "." in item[1]:
                 newFooterList.append(item[1])
 
+        # Create new url for files
+        userUrlSplit = userUrl.rsplit('/', 1)
+        baseUrl = userUrlSplit[0]
+        fileUrl = baseUrl + "/archive/" + year + "/" + month + "/" + product + "/"
+
         # Creating threads
         thread_list = []
         for i in range(10):
             t = threading.Thread(target=download, name="thread{}".format(i),
-                                 args=(newFooterList, userUrl, user_dir), daemon=True)
+                                 args=(newFooterList, fileUrl), daemon=True)
             thread_list.append(t)
             t.start()
 
