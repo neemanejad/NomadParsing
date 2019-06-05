@@ -12,7 +12,8 @@ def footer(containers):
 
 def getYearAndMonth():
     monthList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-    month, year = input("[Nomad]:   Enter month (01-12) and year (2001-2019) in the form (MM/YYYY): ").split()
+    print("\n==========SELECT DATE==========")
+    month, year = input("[Nomad]:   Enter month (01-12) and year (2001-2019) in the form (MM YYYY): ").split()
     month = int(month)
 
     month = monthList[month - 1]
@@ -41,24 +42,33 @@ def listAllProducts(userUrl, month, year):
     containers = page_soup.findAll("optgroup", {"class": "searchtextul"})
 
     # get list of all product names
-    productList = []
+    productTitles = []
+    products = []
     for container in containers:
         for content in enumerate(container.contents):
-            # skip odd indices
-            if content[0] % 2 == 0:
+            try:
+                # skip odd indices
+                if content[0] % 2 == 0:
+                    continue
+                products.append(content[1]["value"])
+                productTitles.append(content[1].string)
+            except KeyError:
                 continue
-            productName = content[1]
-            productList.append(productName)
-        productList.pop(-1)
 
     # Display names of all products
-    for product in enumerate(productList):
+    print("\n==============================PRODUCT LIST==============================")
+    for product in enumerate(productTitles):
         print("%d.  %s" % (product[0] + 1, product[1]))
 
     # select all wanted products
-    wantedProducts = []
-    selectedProducts = input("[Nomad]:   Select all desired products (using numbers): ")
+    wantedProductsIndices = []
+    selectedProducts = input("[Nomad]:   Select all desired products (using numbers, i.g. 1 32 24): ").split(" ")
+    for product in selectedProducts:
+        wantedProductsIndices.append(int(product) - 1)
 
+    wantedProducts = []
+    for i in wantedProductsIndices:
+        wantedProducts.append(products[i])
 
     return wantedProducts
 
