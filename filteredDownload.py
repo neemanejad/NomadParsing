@@ -51,6 +51,14 @@ def download(footer_list, user_url, user_dir):
 
     # Creating individual files under they're own name
     for footer in enumerate(footer_list):
+
+        # Display download progress to user
+        fileNum = footer[0] + 1
+        progress = (fileNum / float(total_files)) * 100
+        sys.stdout.write("\r[Nomad]:   Downloading to %s: %d/%d | %0.2f%%" %
+                         (os.path.basename(os.getcwd()), fileNum, total_files, progress))
+        sys.stdout.flush()
+
         # Checking if file is already in Directory and displaying progress
         if (os.path.isfile(footer[1]) == True):
             continue
@@ -65,20 +73,14 @@ def download(footer_list, user_url, user_dir):
         except urllib.error.HTTPError:
             continue
         except urllib.error.URLError:
-            print("[Nomad]:   Error downloading %s                           \n", footer[1])
+            print("[Nomad]:   ERROR downloading %s                           \n", footer[1])
             continue
 
-        # Display download progress to user
-        fileNum = footer[0] + 1
-        progress = (fileNum / float(total_files)) * 100
-        sys.stdout.write("\r[Nomad]:   Downloading to %s: %d/%d | %0.2f%%" %
-                         (os.path.basename(os.getcwd()), fileNum, total_files, progress))
-        sys.stdout.flush()
 
 def filteredDownload(userUrl, user_dir):
     #products = listAllProducts(userUrl)
     month, year = getYearAndMonth()
-    wantedProducts = ["netcdfqpe", "netcdfqpf", "netcdfMaxT", "	netcdfMinT", "netcdfot"]
+    wantedProducts = ["netcdfqpe", "netcdfqpf", "netcdfMaxT", "netcdfMinT", "netcdfot"]
     for product in wantedProducts:
         # Create and open url for product
         userUrl = userUrl + "?myyear=" + year + "&mymon=" + month + "&output=single&myprod=" + product
@@ -101,7 +103,7 @@ def filteredDownload(userUrl, user_dir):
         containers = page_soup.find_all("td", {"class": "table-listing-content"})
 
         # Gets all the footers for the download links
-        sys.stdout.write("[Nomad]:   Setting up download instance for \"%s\"...\n\n" % product)
+        sys.stdout.write("[Nomad]:   Setting up download instance for \"%s\"...\n" % product)
         sys.stdout.flush()
         footer_list = footer(containers)
 
@@ -111,9 +113,18 @@ def filteredDownload(userUrl, user_dir):
             if "." in item[1]:
                 newFooterList.append(item[1])
 
+        # Creating threads
+        thread_list = []
+        for i in range(10):
+            t = threading.Thread(target=download, name="thread{}".format(i),
+                                 args=(newFooterList, userUrl, user_dir), daemon=True)
+            thread_list.append(t)
+            t.start()
 
-        download(newFooterList, userUrl, user_dir)
-        print("\n")
+        for t in thread_list:
+            t.join()
+
+        print("\n[Nomad]:   SUCCESS - Downloads done for %s\n" % product)
 
 
 
