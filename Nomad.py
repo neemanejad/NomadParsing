@@ -8,20 +8,21 @@ def selectURL(websiteList):
         numOfWebsites = 0
         # Print list of currently supported websites
         for website in enumerate(websiteList):
-            print(str(website[0]) + ". " + website[1])
+            print(str(website[0] + 1) + ". " + website[1])
             numOfWebsites += 1
 
         # input validation for user given directory
         check.check_dir(sys.argv[1])
 
         choice = input("[Nomad]:   Select website (type number): ")
-        if int(choice) > numOfWebsites - 1 or int(choice) < 0:
+        choice = int(choice) - 1
+        if choice > numOfWebsites - 1 or choice < 0:
             print("[Nomad]:   Error, type a number that exists in the list\n")
             continue
         else:
             break
 
-    return websiteList[int(choice)]
+    return websiteList[choice]
 
 def massDownloader():
     # perform mass download configuration
