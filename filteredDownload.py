@@ -3,6 +3,33 @@ from urllib import parse
 from bs4 import BeautifulSoup as soup
 import os, sys, threading, urllib, check
 
+def getMaxYear(userUrl):
+    # open base url to get max year
+    uClient = urlopen(userUrl)
+    page_html = uClient.read()
+
+    # Closing client
+    uClient.close()
+
+    # organize html source code
+    page_soup = soup(page_html, "html.parser")
+
+    containers = page_soup.find_all("select", {"id": "yyyy"})
+
+    # get all listing years
+    yearList = []
+    for year in enumerate(containers[0].contents):
+        try:
+            # skip odd indices
+            if year[0] % 2 == 0:
+                continue
+            yearList.append(year[1]["value"])
+        except KeyError:
+            continue
+
+    return int(max(yearList))
+
+
 def footer(containers):
     footer_list = []
     for container in containers:
@@ -10,18 +37,19 @@ def footer(containers):
         footer_list.append(footer)
     return footer_list
 
-def getYearAndMonth():
+def getYearAndMonth(userUrl):
+    maxYear = getMaxYear(userUrl)
     monthList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
     while(1):
         try:
             print("\n==========SELECT DATE==========")
-            month, year = input("[Nomad]:   Enter month (01-12) and year (2001-2019) in the form (MM YYYY): ").split()
+            month, year = input("[Nomad]:   Enter month (01-12) and year (2001-" + str(maxYear) + ") in the form (MM YYYY): ").split()
             month = int(month)
             if month < 1 or month > 12:
                 print("[Nomad]:   ERROR - month must be between 01-12")
                 continue
-            elif int(year) < 2001 or int(year) > 2019:
-                print("[Nomad]:   ERROR - year must be between 2001-2019")
+            elif int(year) < 2001 or int(year) > getMaxYear(userUrl):
+                print("[Nomad]:   ERROR - year must be between 2001-" + str(maxYear))
                 continue
         except ValueError:
             print("[Nomad]:   ERROR - date requires the month and year in the form (MM YYYY)")
@@ -127,8 +155,7 @@ def download(footer_list, user_url):
 
 
 def filteredDownload(userUrl, user_dir):
-    #products = listAllProducts(userUrl)
-    month, year = getYearAndMonth()
+    month, year = getYearAndMonth(userUrl)
 
     wantedProducts = listAllProducts(userUrl, month, year)
     for product in wantedProducts:
@@ -180,7 +207,4 @@ def filteredDownload(userUrl, user_dir):
             t.join()
 
         print("\n[Nomad]:   SUCCESS - Downloads done for %s\n" % product)
-
-
-
 
