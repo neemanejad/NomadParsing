@@ -163,7 +163,7 @@ def download(footer_list, user_url):
             print("[Nomad]:   ERROR downloading %s                           \n", footer[1])
             continue
         except ConnectionResetError:
-            print("\n[Nomad]:   ERROR - connection was forcibly closed by remote host")
+            print("\n[Nomad]:   ERROR - lost connection")
 
 
 def filteredDownload(userUrl, user_dir):
