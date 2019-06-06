@@ -102,14 +102,26 @@ def listAllProducts(userUrl, month, year):
         print("%d.  %s" % (product[0] + 1, product[1]))
 
     # select all wanted products
+    badVal = False
     while(1):
         wantedProductsIndices = []
         selectedProducts = input("\n[Nomad]:   Select all desired products (using numbers, i.g. 1 32 24): ").strip(" ").split(" ")
         for productNum in selectedProducts:
-            if int(productNum) > len(products) or int(productNum) < 0:
-                print("[Nomad]:   ERROR - product number %d doesn't exist, it won't be downloaded" % int(productNum))
-                continue
-            wantedProductsIndices.append(int(productNum) - 1)
+            try:
+                if int(productNum) > len(products) or int(productNum) < 0:
+                    print("[Nomad]:   ERROR - product number %d doesn't exist, it won't be downloaded" % int(productNum))
+                    continue
+                wantedProductsIndices.append(int(productNum) - 1)
+            except ValueError:
+                print("[Nomad]:   ERROR - please use numbers to select products")
+                badVal = True
+                break
+
+        # Check if user input letters instead of numbers
+        if badVal:
+            badVal = False
+            continue
+
         break
 
     wantedProducts = []
