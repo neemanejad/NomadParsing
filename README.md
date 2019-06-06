@@ -1,10 +1,13 @@
 ## NomadParsing
-NomadParse is a program that allows a user to download large amounts of files with ease through automation. As of right now, the program only downoads files from: https://nomads.ncdc.noaa.gov/data/ndfd/201809/20180908/.
+NomadParse is a program that allows a user to 
+download large amounts of files with ease through 
+automation. As of right now, the program only 
+downoads files from: https://nomads.ncdc.noaa.gov/data/ndfd/201809/20180908/ https://www.cnrfc.noaa.gov/arc_search.php
 
 ## Usage
 As soon as the program begins, you'll be asked for input. You're input arguments should be these items in this particular order:
-1. Full path for download location
-2. The website: https://nomads.ncdc.noaa.gov/data/ndfd/201809/20180908/
+1. Which of the currently supported websites you'd like to download from.
+2. If second website is chosen, then user will be asked for month and year of the desired files and the project(s) to download from. 
 
 If these input arguments are not met, the program will display an error message with the correct usage and exit. One thing to note is that if the indicated path doesn't exist, NomadParse will attempt to create it. 
 
