@@ -160,10 +160,10 @@ def download(footer_list, user_url):
         except urllib.error.HTTPError:
             continue
         except urllib.error.URLError:
-            print("[Nomad]:   ERROR downloading %s                           \n", footer[1])
+            print("[Nomad]:   ERROR downloading %s                           \n" % footer[1])
             continue
         except ConnectionResetError:
-            print("\n[Nomad]:   ERROR - lost connection")
+            print("\n[Nomad]:   ERROR - connection timeout, couldn't download %s          \n" % footer[1])
 
 
 def filteredDownload(userUrl, user_dir):
