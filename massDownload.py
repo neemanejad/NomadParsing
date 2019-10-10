@@ -34,11 +34,6 @@ def download(footer_list, user_url, user_dir):
             if (os.path.isfile(footer[1]) == True):
                 continue
 
-
-        # Grabbing current file number
-        with lock:
-            file_num = footer[0] + 1
-
         # Writing files to current directory
         try:
             file = open(footer[1], "wb")
